@@ -37,6 +37,34 @@
   .nav-logo { font-family:'Montserrat',sans-serif; font-weight:800; font-size:22px; color:var(--primary); letter-spacing:-1px; }
   .nav-logo span { color:var(--accent); }
   .nav-btns { display:flex; gap:8px; }
+  .nav-utility-link { background:none; border:none; font-size:13px; font-weight:600; color:var(--text-sub); cursor:pointer; }
+  .nav-utility-link:hover { color:var(--primary); }
+
+  /* LOCAL TABS (특징/제원/갤러리/모델비교/가격/견적내기) */
+  .local-tabs {
+    display:flex; gap:4px; background:#fff; border-bottom:1px solid var(--border);
+    padding:0 28px; position:sticky; top:61px; z-index:99; overflow-x:auto;
+  }
+  .local-tab {
+    padding:14px 16px; font-size:14px; font-weight:600; color:var(--text-sub);
+    cursor:pointer; border:none; background:none; border-bottom:3px solid transparent;
+    white-space:nowrap; transition:color .15s;
+  }
+  .local-tab:hover { color:var(--primary); }
+  .local-tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+
+  /* HERO IMAGE (placeholder) */
+  .hero-photo {
+    width:100%; max-width:720px; height:320px; border-radius:20px; margin:0 auto 32px;
+    background:linear-gradient(135deg,#dcefe2,#b8dcc4); display:flex; align-items:center; justify-content:center;
+    color:var(--text-sub); font-size:14px; position:relative; z-index:1;
+  }
+
+  /* 준비중 placeholder */
+  .coming-soon { background:#fff; border-radius:20px; padding:60px 32px; text-align:center; box-shadow:0 2px 12px rgba(0,0,0,0.06); }
+  .coming-soon .icon { font-size:40px; margin-bottom:16px; }
+  .coming-soon h3 { font-size:20px; font-weight:700; margin-bottom:10px; }
+  .coming-soon p { color:var(--text-sub); font-size:14px; line-height:1.7; }
   .btn-home { background:#f1f5f9; border:none; border-radius:8px; padding:8px 18px; font-size:13px; font-weight:600; color:var(--text); cursor:pointer; transition:background .2s; }
   .btn-home:hover { background:#e2e8f0; }
   .btn-back { background:var(--primary); border:none; border-radius:8px; padding:8px 18px; font-size:13px; font-weight:600; color:#fff; cursor:pointer; transition:background .2s; }
@@ -185,14 +213,25 @@
 <div id="page-landing" class="page active">
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
+    <div class="nav-btns">
+      <button class="nav-utility-link" onclick="goTo('page-site-placement')">내 땅에 배치해보기</button>
+    </div>
   </nav>
+  <div class="local-tabs" id="mainTabs">
+    <button class="local-tab active" onclick="goToTab('page-landing', this)">홈</button>
+    <button class="local-tab" onclick="goToTab('page-features', this)">특징</button>
+    <button class="local-tab" onclick="goToTab('page-specs', this)">제원</button>
+    <button class="local-tab" onclick="goToTab('page-gallery', this)">갤러리</button>
+    <button class="local-tab" onclick="goToTab('page-structure-guide', this)">모델비교</button>
+    <button class="local-tab" onclick="goToTab('page-price', this)">가격</button>
+    <button class="local-tab" onclick="goToTab('page-type-select', this)">견적내기</button>
+  </div>
   <div class="landing-hero">
     <div class="landing-badge">Passive House Institute Korea</div>
     <h1 class="landing-title">검증된 표준주택,<br><span class="hl">직접 설계</span>하세요</h1>
     <p class="landing-sub">한국패시브건축협회(PHIKO)가 인증한 표준주택 플랫폼.<br>구조·재질을 선택하고 3D로 확인한 뒤 바로 계약까지 완료하세요.</p>
+    <div class="hero-photo">표준주택 대표 사진 자리 (추후 실제 사진/렌더 이미지로 교체)</div>
     <button class="btn-start" onclick="goTo('page-type-select')">표준주택 설계 시작하기</button>
-    <button class="btn-start" style="background:#fff;color:var(--primary);border:2px solid var(--primary);margin-top:14px;box-shadow:none;" onclick="goTo('page-site-placement')">내 땅에 배치해보기</button>
-    <button class="btn-start" style="background:#fff;color:var(--primary);border:2px solid var(--primary);margin-top:14px;box-shadow:none;" onclick="goTo('page-structure-guide')">어떤 구조가 좋을지 알아보기</button>
     <div class="landing-features">
       <div class="feat-card">
         <div class="feat-icon">
@@ -247,6 +286,118 @@
     </div>
   </nav>
   <iframe src="structure-guide/index.html" style="flex:1;width:100%;border:none;display:block;"></iframe>
+</div>
+
+<!-- ============================================================ -->
+<!--  PAGE: 특징 (준비중)                                          -->
+<!-- ============================================================ -->
+<div id="page-features" class="page">
+  <nav class="top-nav">
+    <div class="nav-logo">PHI<span>KO</span></div>
+    <div class="nav-btns">
+      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
+    </div>
+  </nav>
+  <div class="local-tabs">
+    <button class="local-tab" onclick="goToTab('page-landing', this)">홈</button>
+    <button class="local-tab active" onclick="goToTab('page-features', this)">특징</button>
+    <button class="local-tab" onclick="goToTab('page-specs', this)">제원</button>
+    <button class="local-tab" onclick="goToTab('page-gallery', this)">갤러리</button>
+    <button class="local-tab" onclick="goToTab('page-structure-guide', this)">모델비교</button>
+    <button class="local-tab" onclick="goToTab('page-price', this)">가격</button>
+    <button class="local-tab" onclick="goToTab('page-type-select', this)">견적내기</button>
+  </div>
+  <div class="page-content">
+    <div class="coming-soon">
+      <div class="icon">✨</div>
+      <h3>특징 (준비중)</h3>
+      <p>PHIKO 표준주택의 핵심 특장점을 소개하는 페이지입니다.<br>협회 인증 내용, 시공 품질, 단열·에너지 성능 등 실제 자료를 주시면 채워 넣겠습니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!--  PAGE: 제원 (준비중)                                          -->
+<!-- ============================================================ -->
+<div id="page-specs" class="page">
+  <nav class="top-nav">
+    <div class="nav-logo">PHI<span>KO</span></div>
+    <div class="nav-btns">
+      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
+    </div>
+  </nav>
+  <div class="local-tabs">
+    <button class="local-tab" onclick="goToTab('page-landing', this)">홈</button>
+    <button class="local-tab" onclick="goToTab('page-features', this)">특징</button>
+    <button class="local-tab active" onclick="goToTab('page-specs', this)">제원</button>
+    <button class="local-tab" onclick="goToTab('page-gallery', this)">갤러리</button>
+    <button class="local-tab" onclick="goToTab('page-structure-guide', this)">모델비교</button>
+    <button class="local-tab" onclick="goToTab('page-price', this)">가격</button>
+    <button class="local-tab" onclick="goToTab('page-type-select', this)">견적내기</button>
+  </div>
+  <div class="page-content">
+    <div class="coming-soon">
+      <div class="icon">📐</div>
+      <h3>제원 (준비중)</h3>
+      <p>구조 유형별 평형, 면적, 층수, 단열 성능 등 상세 제원표가 들어갈 자리입니다.<br>실제 수치 자료를 주시면 표로 정리해 넣겠습니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!--  PAGE: 갤러리 (준비중)                                        -->
+<!-- ============================================================ -->
+<div id="page-gallery" class="page">
+  <nav class="top-nav">
+    <div class="nav-logo">PHI<span>KO</span></div>
+    <div class="nav-btns">
+      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
+    </div>
+  </nav>
+  <div class="local-tabs">
+    <button class="local-tab" onclick="goToTab('page-landing', this)">홈</button>
+    <button class="local-tab" onclick="goToTab('page-features', this)">특징</button>
+    <button class="local-tab" onclick="goToTab('page-specs', this)">제원</button>
+    <button class="local-tab active" onclick="goToTab('page-gallery', this)">갤러리</button>
+    <button class="local-tab" onclick="goToTab('page-structure-guide', this)">모델비교</button>
+    <button class="local-tab" onclick="goToTab('page-price', this)">가격</button>
+    <button class="local-tab" onclick="goToTab('page-type-select', this)">견적내기</button>
+  </div>
+  <div class="page-content">
+    <div class="coming-soon">
+      <div class="icon">🖼️</div>
+      <h3>갤러리 (준비중)</h3>
+      <p>준공 사진, 3D 렌더 이미지 등을 모아 보여줄 자리입니다.<br>사진 자료를 주시면 갤러리로 구성해 넣겠습니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!--  PAGE: 가격 (준비중)                                          -->
+<!-- ============================================================ -->
+<div id="page-price" class="page">
+  <nav class="top-nav">
+    <div class="nav-logo">PHI<span>KO</span></div>
+    <div class="nav-btns">
+      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
+    </div>
+  </nav>
+  <div class="local-tabs">
+    <button class="local-tab" onclick="goToTab('page-landing', this)">홈</button>
+    <button class="local-tab" onclick="goToTab('page-features', this)">특징</button>
+    <button class="local-tab" onclick="goToTab('page-specs', this)">제원</button>
+    <button class="local-tab" onclick="goToTab('page-gallery', this)">갤러리</button>
+    <button class="local-tab" onclick="goToTab('page-structure-guide', this)">모델비교</button>
+    <button class="local-tab active" onclick="goToTab('page-price', this)">가격</button>
+    <button class="local-tab" onclick="goToTab('page-type-select', this)">견적내기</button>
+  </div>
+  <div class="page-content">
+    <div class="coming-soon">
+      <div class="icon">💰</div>
+      <h3>가격 (준비중)</h3>
+      <p>구조 유형·평형별 기본 가격, 선택 품목 가격표가 들어갈 자리입니다.<br>실제 가격 자료를 주시면 기아 가격표 같은 트림별 표로 구성하겠습니다.</p>
+    </div>
+  </div>
 </div>
 
 <!-- ============================================================ -->
@@ -701,6 +852,16 @@ function goTo(pageId) {
   if(pageId === 'page-custom-rc') { initCustomRcViewer(); setTimeout(()=>renderWallColors(state.wallMat),200); }
   if(pageId === 'page-custom-other') initOtherViewer();
   if(pageId === 'page-contract') buildContract();
+}
+
+// 상단 탭(특징/제원/갤러리/모델비교/가격/견적내기) 클릭 처리: 페이지 이동 + 탭 활성화 표시
+function goToTab(pageId, btnEl) {
+  goTo(pageId);
+  if(btnEl) {
+    const bar = btnEl.closest('.local-tabs');
+    if(bar) bar.querySelectorAll('.local-tab').forEach(t => t.classList.remove('active'));
+    btnEl.classList.add('active');
+  }
 }
 
 // ============================================================
