@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>표준주택 필지 배치 시뮬레이터 (VWorld)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:"Malgun Gothic","맑은 고딕",sans-serif; font-size:13px; color:#222; }
+  #app { display:flex; height:100vh; }
+  #sidebar { width:340px; min-width:340px; background:#f7f7f8; border-right:1px solid #ddd; padding:14px; overflow-y:auto; }
+  #map { flex:1; }
+  h1 { font-size:15px; margin:0 0 10px; }
+  h2 { font-size:12.5px; margin:16px 0 6px; color:#555; border-bottom:1px solid #ddd; padding-bottom:4px; }
+  label { display:block; font-size:12px; margin:8px 0 3px; color:#333; }
+  input[type=text], input[type=number], select {
+    width:100%; padding:6px 7px; border:1px solid #ccc; border-radius:4px; font-size:12.5px;
+  }
+  input[type=range] { width:100%; }
+  button {
+    padding:7px 10px; border:1px solid #888; background:#fff; border-radius:4px; cursor:pointer; font-size:12.5px;
+  }
+  button:hover { background:#eee; }
+  .row { display:flex; gap:6px; }
+  .row > * { flex:1; }
+  .btn-primary { background:#2a5adf; color:#fff; border-color:#2a5adf; }
+  .btn-primary:hover { background:#1f45b0; }
+  .btn-toggle.active { background:#2a5adf; color:#fff; border-color:#2a5adf; }
+  #status { margin-top:6px; font-size:11.5px; color:#666; white-space:pre-line; line-height:1.5; }
+  .layerchk { display:flex; align-items:center; gap:6px; font-size:12.5px; margin:4px 0; }
+  .layerchk input { width:auto; }
+  #result {
+    margin-top:10px; padding:10px; border-radius:6px; font-size:12.5px; line-height:1.6;
+  }
+  .ok { background:#e7f6ec; border:1px solid #8fd19e; }
+  .warn { background:#fdecea; border:1px solid #f1a9a0; }
+  .neutral { background:#eef1f5; border:1px solid #cdd5e0; }
+  .small { font-size:11px; color:#888; }
+  .footprint-box { display:flex; gap:6px; margin-top:4px; }
+  .footprint-box > div { flex:1; text-align:center; padding:6px; border:1px solid #ccc; border-radius:4px; cursor:pointer; font-size:12px; }
+  .footprint-box > div.sel { background:#2a5adf; color:#fff; border-color:#2a5adf; }
+  hr { border:none; border-top:1px solid #e0e0e0; margin:14px 0; }
+.dim-label {
+  background: rgba(255,255,255,0.85); border:1px solid #888; border-radius:3px;
+  padding:1px 4px; font-size:10.5px; font-weight:bold; color:#222;
+  white-space:nowrap; pointer-events:none;
+}
+.parcel-dim-label {
+  background: rgba(255,150,60,0.9); border:1px solid #cc5500; border-radius:3px;
+  padding:1px 4px; font-size:10.5px; font-weight:bold; color:#fff;
+  white-space:nowrap; pointer-events:none;
+}
+#floorBtnWrap { margin-top:6px; }
+#floorBtnWrap button { flex:1; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="sidebar">
+    <h1>🏠 표준주택 필지 배치 시뮬레이터</h1>
+    <div class="small">VWorld Open API 기반 · 로컬 실행용</div>
+
+    <h2>1. API 인증</h2>
+    <label>VWorld 인증키 (apiKey)</label>
+    <input type="text" id="apiKey" placeholder="발급받은 인증키 붙여넣기">
+    <label>등록 도메인 (domain)</label>
+    <input type="text" id="apiDomain" placeholder="예: localhost" value="localhost">
+    <div class="small">키 발급 시 등록한 도메인과 실제 실행 환경(브라우저 주소)의 도메인이 일치해야 지도/데이터가 정상 표출됩니다.</div>
+    <div class="row" style="margin-top:8px;">
+      <button id="saveKeyBtn">키 저장</button>
+      <button id="loadMapBtn" class="btn-primary">지도 불러오기</button>
+    </div>
+
+    <h2>2. 주소/지번 검색</h2>
+    <input type="text" id="addrInput" placeholder="예: 서울특별시 송파구 중대로 135">
+    <div class="row" style="margin-top:6px;">
+      <button id="searchBtn" class="btn-primary">필지 검색</button>
+      <button id="clearParcelBtn">필지 지우기</button>
+    </div>
+    <div id="status">검색 결과가 여기에 표시됩니다.</div>
+
+    <h2>3. 배경 레이어</h2>
+    <label class="layerchk"><input type="radio" name="basetype" value="Base" checked> 일반 배경지도</label>
+    <label class="layerchk"><input type="radio" name="basetype" value="Satellite"> 위성지도</label>
+    <label class="layerchk"><input type="checkbox" id="cadastralChk" checked> 연속지적도(WMS) 표시</label>
+
+    <h2>4. 건물 배치</h2>
+    <div class="small">지도에서 배치할 위치를 클릭하세요 (배치모드 켜짐 시). 배치 후에는 사각형을 <b>마우스로 드래그</b>해서 위치를 미세 조정하거나, <b>제자리에서 클릭</b>하면 실제 평면도를 볼 수 있습니다.</div>
+    <div class="row" style="margin-top:6px;">
+      <button id="placeModeBtn" class="btn-toggle">📍 배치 위치 클릭 모드</button>
+    </div>
+
+    <div class="footprint-box">
+      <div id="type50" class="sel">50평(복층)<br><span class="small">11.7×7.0m·2층</span></div>
+      <div id="type38">38평(단층)<br><span class="small">17.1×7.3m·1층</span></div>
+      <div id="typeCustom">직접입력</div>
+    </div>
+    <div id="customPyeongWrap" style="display:none; margin-top:6px;">
+      <label>평수 직접 입력</label>
+      <input type="number" id="customPyeong" value="45" min="1" step="0.1">
+    </div>
+    <div class="small" style="margin-top:4px;">
+      실제 도면 기준 외형 치수(2026 표준주택V5 RC 평면). 50평형은 2층 복층 구조라 <b>건축면적(땅에 앉는 면적)은 81.9㎡</b>뿐이며, 나머지는 연면적으로 위에 쌓입니다.
+    </div>
+    <label class="layerchk"><input type="checkbox" id="gridChk" checked> 구조그리드 참고선 표시 (확대 시, 도면 실측 기둥/벽 위치)</label>
+
+    <div id="ratioWrap">
+      <label>가로 : 세로 비율 (직접입력 시에만 적용) — <span id="ratioLabel">1 : 1.3</span></label>
+      <input type="range" id="ratioSlider" min="100" max="250" value="130">
+    </div>
+
+    <label>회전각</label>
+    <div class="row">
+      <input type="range" id="rotSlider" min="0" max="359" value="0" style="flex:3;">
+      <input type="number" id="rotInput" min="0" max="359" value="0" style="flex:1;">
+    </div>
+
+    <div class="row" style="margin-top:8px;">
+      <button id="compareBtn">50평/38평 동시비교</button>
+      <button id="resetPlacementBtn">배치 초기화</button>
+    </div>
+
+    <div id="result" class="neutral">아직 배치되지 않았습니다.</div>
+
+    <label class="layerchk" style="margin-top:8px;"><input type="checkbox" id="planChk" checked> 실내 평면도 표시 (지도 위에 겹쳐보기)</label>
+    <div id="floorBtnWrap" class="row" style="display:none;">
+      <button id="floorBtn1" class="btn-toggle active">1층</button>
+      <button id="floorBtn2" class="btn-toggle">2층</button>
+    </div>
+
+    <hr>
+    <div class="small">
+      ※ 필지 경계는 VWorld 연속지적도 데이터를 참고용으로 표시합니다. 실제 건축 가능 여부(건폐율·용적률·이격거리 등)는 별도 법규 검토가 필요합니다.
+    </div>
+  </div>
+  <div id="map"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+const FLOORPLAN_IMAGES = {
+  50: { 1: "assets/plan50_1f.png" },
+  38: { 1: "assets/plan38_1f.png" }
+};
+
+const PYEONG_TO_M2 = 3.305785;
+
+// 2026 표준주택V5 철근콘크리트 평면 도면 실측 기준 (외벽 그리드 기준, mm→m 환산)
+// 38평형: 단층, 17.1m x 7.3m (건축면적=연면적)
+// 50평형: 2층 복층, 각층 11.7m x 7.0m (건축면적은 1개층 면적, 연면적은 2개층 합산)
+const REAL_FOOTPRINTS = {
+  50: { w: 11.7, h: 7.0, floors: 2, buildingAreaM2: 11.7*7.0, totalAreaM2: 11.7*7.0*2, label:'50평형(복층)',
+        gridX_mm: [0,1900,6100,8000,11700] }, // X1~X5 그리드 (도면 실측)
+  38: { w: 17.1, h: 7.3, floors: 1, buildingAreaM2: 17.1*7.3, totalAreaM2: 17.1*7.3, label:'38평형(단층)',
+        gridX_mm: [0,3700,5500,9200,13400,17100] } // X1~X6 그리드 (도면 실측)
+};
+
+let apiKey = "";
+let apiDomain = "localhost";
+let map, baseLayer, cadastralLayer;
+let parcelLayer = null;   // 검색된 필지 경계 폴리곤 (leaflet layer)
+let parcelPolygons = [];  // [[ [lng,lat], ... ], ...] 좌표 배열 (판정용)
+let placeMode = false;
+let footprintLayers = []; // 현재 표시중인 footprint polygon(s)
+let center = null;        // 현재 배치 중심 [lat,lng]
+let houseType = 50;       // 50 | 38 | 'custom'
+let compareMode = false;
+
+// ---------- 초기 지도 ----------
+function initMap(){
+  map = L.map('map', { zoomControl:true, maxZoom:22 }).setView([37.5665, 126.9780], 16); // 서울 시청 기본값
+  addBaseLayer('Base');
+  map.on('click', onMapClick);
+  initFootprintDragHandlers();
+}
+
+function addBaseLayer(type){
+  if (baseLayer) map.removeLayer(baseLayer);
+  const ext = type === 'Satellite' ? 'jpeg' : 'png';
+  const url = `https://api.vworld.kr/req/wmts/1.0.0/${apiKey}/${type}/{z}/{y}/{x}.${ext}`;
+  baseLayer = L.tileLayer(url, {
+    maxZoom: 22, maxNativeZoom: 19, minZoom: 6,
+    attribution: '&copy; VWorld',
+    errorTileUrl: ''
+  });
+  baseLayer.addTo(map);
+}
+
+function toggleCadastral(show){
+  if (cadastralLayer) { map.removeLayer(cadastralLayer); cadastralLayer = null; }
+  if (!show) return;
+  cadastralLayer = L.tileLayer.wms('https://api.vworld.kr/req/wms', {
+    layers: 'lp_pa_cbnd_bonbun,lp_pa_cbnd_bubun',
+    styles: 'lp_pa_cbnd_bonbun_line,lp_pa_cbnd_bubun_line',
+    format: 'image/png',
+    transparent: true,
+    version: '1.3.0',
+    key: apiKey,
+    domain: apiDomain,
+    maxZoom: 22
+  });
+  cadastralLayer.addTo(map);
+}
+
+// ---------- 상태 표시 ----------
+function setStatus(msg){ document.getElementById('status').textContent = msg; }
+
+// ---------- JSONP 헬퍼 ----------
+// VWorld REST API는 브라우저 fetch()의 CORS를 지원하지 않으므로,
+// <script> 태그 삽입 방식의 JSONP로 우회 호출한다. (callback 파라미터 사용)
+let __jsonpSeq = 0;
+function jsonpRequest(baseUrl, params, timeoutMs = 8000){
+  return new Promise((resolve, reject)=>{
+    const cbName = `__vwjsonp_${Date.now()}_${__jsonpSeq++}`;
+    const qs = Object.entries(params).map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+    const script = document.createElement('script');
+    script.src = `${baseUrl}?${qs}&callback=${cbName}`;
+
+    const cleanup = ()=>{
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      clearTimeout(timer);
+    };
+    const timer = setTimeout(()=>{ cleanup(); reject(new Error('JSONP 응답 시간 초과')); }, timeoutMs);
+
+    window[cbName] = (data)=>{ cleanup(); resolve(data); };
+    script.onerror = ()=>{ cleanup(); reject(new Error('JSONP 요청 실패 (네트워크/키 오류 가능)')); };
+    document.body.appendChild(script);
+  });
+}
+
+// ---------- 주소 검색 ----------
+async function searchAddress(){
+  const q = document.getElementById('addrInput').value.trim();
+  if (!q){ setStatus('주소 또는 지번을 입력하세요.'); return; }
+  if (!apiKey){ setStatus('먼저 API 키를 입력하고 저장하세요.'); return; }
+  setStatus('검색 중...');
+
+  try {
+    // 1) 통합검색 API로 지번(PARCEL) 검색 시도 -> PNU 확보
+    let res = null;
+    try{
+      res = await jsonpRequest('https://api.vworld.kr/req/search', {
+        service:'search', request:'search', version:'2.0', crs:'EPSG:4326',
+        size:5, page:1, query:q, type:'address', category:'parcel',
+        format:'json', key:apiKey, domain:apiDomain
+      });
+    }catch(e){ console.warn('검색 API 실패:', e); }
+
+    let lng=null, lat=null, pnu=null;
+    const items = res?.response?.result?.items;
+    if (res?.response?.status === 'OK' && items && items.length){
+      const it = items[0];
+      pnu = it.id;
+      lng = parseFloat(it.point.x);
+      lat = parseFloat(it.point.y);
+    }
+
+    // 2) 실패시 지오코더(주소->좌표)로 폴백
+    if (lng===null){
+      let gr = null;
+      try{
+        gr = await jsonpRequest('https://api.vworld.kr/req/address', {
+          service:'address', request:'getcoord', version:'2.0', crs:'epsg:4326',
+          address:q, refine:true, simple:false, format:'json',
+          type:'road', key:apiKey, domain:apiDomain
+        });
+      }catch(e){ console.warn('지오코더 API 실패:', e); }
+      if (gr?.response?.status === 'OK'){
+        lng = parseFloat(gr.response.result.point.x);
+        lat = parseFloat(gr.response.result.point.y);
+      }
+    }
+
+    if (lng===null){
+      setStatus('검색 결과가 없습니다. 주소를 다시 확인해주세요.\n(도로명주소 또는 "시/군/구 + 동 + 지번" 형식 권장)');
+      return;
+    }
+
+    map.setView([lat, lng], 19);
+    center = [lat, lng];
+    clearParcel();
+
+    if (pnu){
+      await loadParcelByPnu(pnu);
+      let dimInfo = '';
+      if (lastParcelMetrics){
+        const m = lastParcelMetrics;
+        const edgesStr = m.edges.map(e=>e.length.toFixed(1)).join('m, ') + 'm';
+        dimInfo = `\n필지 면적: ${m.areaM2.toFixed(1)}㎡ (외접 ${m.bboxW.toFixed(1)}×${m.bboxH.toFixed(1)}m)\n각 변 길이: ${edgesStr}`;
+      }
+      setStatus(`검색 완료 (PNU: ${pnu})\n필지 경계를 지도에 표시했습니다.${dimInfo}\n"배치 위치 클릭 모드"를 켜고 지도를 클릭해 건물을 배치하세요.`);
+    } else {
+      setStatus('좌표는 찾았으나 지번(PNU) 정보가 없어 필지 경계는 표시하지 못했습니다.\n지적도(WMS) 레이어를 참고해 배치하세요.');
+    }
+  } catch(e){
+    setStatus('오류 발생: ' + e.message + '\nAPI 키/도메인 설정을 확인하세요.');
+  }
+}
+
+// ---------- 필지 치수 계산 ----------
+function shoelaceAreaM2(poly, mPerDegLat, mPerDegLng){
+  const [lng0,lat0] = poly[0];
+  const pts = poly.map(([lng,lat])=>[(lng-lng0)*mPerDegLng, (lat-lat0)*mPerDegLat]);
+  let area = 0;
+  for(let i=0;i<pts.length-1;i++){
+    area += pts[i][0]*pts[i+1][1] - pts[i+1][0]*pts[i][1];
+  }
+  return Math.abs(area)/2;
+}
+
+function computeParcelMetrics(poly){
+  const lats = poly.map(p=>p[1]);
+  const lngs = poly.map(p=>p[0]);
+  const latC = (Math.min(...lats)+Math.max(...lats))/2;
+  const mPerDegLat = 111320;
+  const mPerDegLng = 111320 * Math.cos(latC*Math.PI/180);
+  const bboxW = (Math.max(...lngs)-Math.min(...lngs)) * mPerDegLng;
+  const bboxH = (Math.max(...lats)-Math.min(...lats)) * mPerDegLat;
+  const cLng = lngs.reduce((a,b)=>a+b,0)/lngs.length;
+  const cLat = lats.reduce((a,b)=>a+b,0)/lats.length;
+  const edges = [];
+  for (let i=0; i<poly.length-1; i++){
+    const [lng1,lat1] = poly[i], [lng2,lat2] = poly[i+1];
+    const dx = (lng2-lng1)*mPerDegLng, dy = (lat2-lat1)*mPerDegLat;
+    const len = Math.sqrt(dx*dx+dy*dy);
+    if (len > 0.3){ // 폐곡선 마감점(중복) 제외
+      edges.push({ length: len, midLng:(lng1+lng2)/2, midLat:(lat1+lat2)/2 });
+    }
+  }
+  const areaM2 = shoelaceAreaM2(poly, mPerDegLat, mPerDegLng);
+
+  // 면적 라벨을 놓을 우측 상단(북동쪽) 꼭짓점 탐색
+  let cornerLng = poly[0][0], cornerLat = poly[0][1], bestScore = -Infinity;
+  for (const p of poly){
+    const score = (p[0]-cLng)*mPerDegLng + (p[1]-cLat)*mPerDegLat; // 동+북 방향 가중
+    if (score > bestScore){ bestScore = score; cornerLng = p[0]; cornerLat = p[1]; }
+  }
+
+  return { bboxW, bboxH, edges, areaM2, centroidLng:cLng, centroidLat:cLat, mPerDegLat, mPerDegLng, cornerLng, cornerLat };
+}
+
+let lastParcelMetrics = null;
+let parcelDimLabels = [];
+
+// ---------- 필지 경계 조회 ----------
+async function loadParcelByPnu(pnu){
+  try{
+    const r = await jsonpRequest('https://api.vworld.kr/req/data', {
+      service:'data', request:'GetFeature', data:'LP_PA_CBND_BUBUN',
+      key:apiKey, domain:apiDomain, attrFilter:`pnu:=:${pnu}`,
+      format:'json', crs:'EPSG:4326', size:10, page:1
+    });
+    const features = r?.response?.result?.featureCollection?.features;
+    if (!features || !features.length) return;
+
+    parcelPolygons = [];
+    const geo = L.geoJSON(r.response.result.featureCollection, {
+      style: { color:'#ff6600', weight:2, fillColor:'#ff9944', fillOpacity:0.15 }
+    });
+    // 판정용 좌표 캐싱 (다각형 exterior ring들)
+    features.forEach(f=>{
+      const g = f.geometry;
+      if (g.type === 'Polygon'){
+        parcelPolygons.push(g.coordinates[0]);
+      } else if (g.type === 'MultiPolygon'){
+        g.coordinates.forEach(poly=>parcelPolygons.push(poly[0]));
+      }
+    });
+    parcelLayer = geo.addTo(map);
+    map.fitBounds(geo.getBounds(), { padding:[40,40] });
+
+    // 가로/세로 및 각 변 길이 계산 후 지도에 라벨 표시 (각 변 중점에 바깥쪽으로 오프셋하여 겹침 방지)
+    parcelDimLabels.forEach(l=>map.removeLayer(l));
+    parcelDimLabels = [];
+    if (parcelPolygons.length){
+      lastParcelMetrics = computeParcelMetrics(parcelPolygons[0]);
+      const m = lastParcelMetrics;
+
+      // 면적: 우측 상단(북동) 꼭짓점 바깥쪽으로 띄워서 표시 (폴리곤과 겹치지 않게)
+      const cornerDxM = (m.cornerLng - m.centroidLng) * m.mPerDegLng;
+      const cornerDyM = (m.cornerLat - m.centroidLat) * m.mPerDegLat;
+      const cornerNorm = Math.sqrt(cornerDxM*cornerDxM + cornerDyM*cornerDyM) || 1;
+      const cornerOffsetM = 2.5;
+      const cornerLabelLng = m.cornerLng + (cornerDxM/cornerNorm) * cornerOffsetM / m.mPerDegLng;
+      const cornerLabelLat = m.cornerLat + (cornerDyM/cornerNorm) * cornerOffsetM / m.mPerDegLat;
+      const areaLabel = L.marker([cornerLabelLat, cornerLabelLng], {
+        icon: L.divIcon({ className:'', iconSize:[0,0],
+          html:`<div class="parcel-dim-label">면적 ${m.areaM2.toFixed(1)}㎡</div>` }),
+        interactive:false
+      }).addTo(map);
+      parcelDimLabels.push(areaLabel);
+
+      // 각 변: 중점에서 바깥쪽으로 살짝 띄워서 길이 표시 (겹침 방지)
+      m.edges.forEach(edge=>{
+        const dxRawM = (edge.midLng - m.centroidLng) * m.mPerDegLng;
+        const dyRawM = (edge.midLat - m.centroidLat) * m.mPerDegLat;
+        const norm = Math.sqrt(dxRawM*dxRawM + dyRawM*dyRawM) || 1;
+        const offsetM = 2.0;
+        const offLng = (dxRawM/norm) * offsetM / m.mPerDegLng;
+        const offLat = (dyRawM/norm) * offsetM / m.mPerDegLat;
+        const lbl = L.marker([edge.midLat+offLat, edge.midLng+offLng], {
+          icon: L.divIcon({ className:'', iconSize:[0,0],
+            html:`<div class="parcel-dim-label">${edge.length.toFixed(1)}m</div>` }),
+          interactive:false
+        }).addTo(map);
+        parcelDimLabels.push(lbl);
+      });
+    } else {
+      lastParcelMetrics = null;
+    }
+  }catch(e){
+    console.error(e);
+  }
+}
+
+function clearParcel(){
+  if (parcelLayer){ map.removeLayer(parcelLayer); parcelLayer = null; }
+  parcelDimLabels.forEach(l=>map.removeLayer(l));
+  parcelDimLabels = [];
+  parcelPolygons = [];
+  lastParcelMetrics = null;
+}
+
+// ---------- footprint 계산/표시 ----------
+function currentAreaM2(){
+  if (houseType === 'custom'){
+    const p = parseFloat(document.getElementById('customPyeong').value) || 0;
+    return p * PYEONG_TO_M2;
+  }
+  return houseType * PYEONG_TO_M2;
+}
+
+// 중심점(centerLatLng) 기준 로컬 평면좌표(x,y, 단위 m)를 rotDeg 회전 후 위경도로 변환
+function localToLatLng(centerLatLng, x, y, rotDeg){
+  const [lat, lng] = centerLatLng;
+  const rot = rotDeg * Math.PI/180;
+  const mPerDegLat = 111320;
+  const mPerDegLng = 111320 * Math.cos(lat * Math.PI/180);
+  const rx = x*Math.cos(rot) - y*Math.sin(rot);
+  const ry = x*Math.sin(rot) + y*Math.cos(rot);
+  return [lng + rx/mPerDegLng, lat + ry/mPerDegLat]; // [lng, lat]
+}
+
+// 위/경도 상에서 중심점 기준 가로(w,m) x 세로(h,m) 사각형을 rotDeg 만큼 회전한 4개 꼭짓점 [lng,lat] 반환
+function rectCorners(centerLatLng, wM, hM, rotDeg){
+  const hw = wM/2, hh = hM/2;
+  const localCorners = [[-hw,-hh],[hw,-hh],[hw,hh],[-hw,hh]];
+  return localCorners.map(([x,y])=>localToLatLng(centerLatLng, x, y, rotDeg));
+}
+
+function pointInPolygon(pt, poly){
+  // ray casting, poly: [[lng,lat],...], pt: [lng,lat]
+  let inside = false;
+  for (let i=0, j=poly.length-1; i<poly.length; j=i++){
+    const xi=poly[i][0], yi=poly[i][1], xj=poly[j][0], yj=poly[j][1];
+    const intersect = ((yi>pt[1]) !== (yj>pt[1])) &&
+      (pt[0] < (xj-xi)*(pt[1]-yi)/(yj-yi) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+function allCornersInsideParcel(corners){
+  if (!parcelPolygons.length) return null; // 필지 정보 없음 -> 판정불가
+  return corners.every(c => parcelPolygons.some(poly => pointInPolygon(c, poly)));
+}
+
+function drawFootprint(){
+  footprintLayers.forEach(l=>map.removeLayer(l));
+  footprintLayers = [];
+  updateFloorBtnVisibility();
+  if (!center) return;
+
+  const ratio = parseInt(document.getElementById('ratioSlider').value)/100; // 세로/가로
+  const rot = parseInt(document.getElementById('rotSlider').value);
+
+  const typesToDraw = compareMode ? [50,38] : [houseType];
+  const colors = { 50:'#2a5adf', 38:'#e0851a', custom:'#2a5adf' };
+
+  let resultHtml = '';
+  let anyOutside = false;
+  let anyUnknown = false;
+
+  typesToDraw.forEach(t=>{
+    let w, h, areaLabel, pyeongLabel;
+    const real = REAL_FOOTPRINTS[t];
+
+    if (real){
+      // 실제 도면 기준 외형 치수 사용 (건축면적 = 땅에 앉는 면적)
+      w = real.w; h = real.h;
+      pyeongLabel = real.label;
+      if (real.floors > 1){
+        areaLabel = `건축면적 ${real.buildingAreaM2.toFixed(2)}㎡ (연면적 ${real.totalAreaM2.toFixed(2)}㎡ · ${real.floors}층)`;
+      } else {
+        areaLabel = `건축면적=연면적 ${real.buildingAreaM2.toFixed(2)}㎡ (단층)`;
+      }
+    } else {
+      // 직접입력: 평수 기반 사각형 근사 (실제 도면 없음)
+      const areaM2 = currentAreaM2();
+      w = Math.sqrt(areaM2/ratio);
+      h = areaM2/w;
+      pyeongLabel = `${(areaM2/PYEONG_TO_M2).toFixed(1)}평(직접입력, 근사 사각형)`;
+      areaLabel = `${areaM2.toFixed(2)}㎡`;
+    }
+
+    const corners = rectCorners(center, w, h, rot);
+    const latlngs = corners.map(([lng,lat])=>[lat,lng]);
+    const color = colors[t] || '#2a5adf';
+    const showPlan = document.getElementById('planChk').checked && FLOORPLAN_IMAGES[t];
+    const poly = L.polygon(latlngs, { color, weight:2, fillColor:color, fillOpacity: showPlan ? 0.08 : 0.35 }).addTo(map);
+    poly.getElement()?.style.setProperty('cursor', 'move');
+    enableFootprintDrag(poly, t);
+    footprintLayers.push(poly);
+
+    if (showPlan){
+      const overlay = addFloorplanOverlay(t, corners);
+      if (overlay) footprintLayers.push(overlay);
+    }
+
+    // 가로/세로 치수 라벨 (윗변=가로 w, 오른쪽변=세로 h, 바깥쪽으로 살짝 띄워서 겹침 방지)
+    const hw = w/2, hh = h/2, lblOff = 0.8;
+    const wLabelPt = localToLatLng(center, 0, -(hh+lblOff), rot); // 윗변 바깥
+    const hLabelPt = localToLatLng(center, hw+lblOff, 0, rot);    // 오른쪽변 바깥
+    const midW = [wLabelPt[1], wLabelPt[0]]; // [lat,lng]
+    const midH = [hLabelPt[1], hLabelPt[0]];
+    footprintLayers.push(L.marker(midW, {
+      icon: L.divIcon({ className:'', html:`<div class="dim-label">${w.toFixed(1)}m</div>`, iconSize:[0,0] }),
+      interactive:false
+    }).addTo(map));
+    footprintLayers.push(L.marker(midH, {
+      icon: L.divIcon({ className:'', html:`<div class="dim-label">${h.toFixed(1)}m</div>`, iconSize:[0,0] }),
+      interactive:false
+    }).addTo(map));
+
+    // 구조그리드 참고선 (확대 시, 실제 도면 실측 기둥/벽 위치) - REAL_FOOTPRINTS 타입에만 적용
+    const showGrid = document.getElementById('gridChk').checked && map.getZoom() >= 19;
+    if (real && real.gridX_mm && showGrid){
+      const hw = w/2, hh = h/2;
+      real.gridX_mm.slice(1,-1).forEach(mm=>{
+        const x = mm/1000 - hw; // 로컬 x좌표 (m), 중심 기준
+        const p1 = localToLatLng(center, x, -hh, rot);
+        const p2 = localToLatLng(center, x, hh, rot);
+        const line = L.polyline([[p1[1],p1[0]],[p2[1],p2[0]]], {
+          color:'#999', weight:1, dashArray:'4,4', interactive:false
+        }).addTo(map);
+        footprintLayers.push(line);
+      });
+    }
+
+    const inside = allCornersInsideParcel(corners);
+    let statusText;
+    if (inside === null){ statusText='필지 경계 미확인 (참고용 배치)'; anyUnknown = true; }
+    else if (inside){ statusText='✅ 필지 경계 내 배치 가능'; }
+    else { statusText='⚠️ 필지 경계를 벗어남'; anyOutside = true; }
+
+    resultHtml += `<b>${pyeongLabel}</b> — ${areaLabel} (가로 ${w.toFixed(2)}m × 세로 ${h.toFixed(2)}m, 회전 ${rot}°)<br>${statusText}<br><br>`;
+  });
+
+  const resDiv = document.getElementById('result');
+  resDiv.innerHTML = resultHtml.trim();
+  resDiv.className = anyOutside ? 'warn' : (anyUnknown ? 'neutral' : 'ok');
+}
+
+// ---------- footprint 드래그 이동 ----------
+let isDraggingFootprint = false;
+let dragStartLatLng = null;
+let dragStartCenter = null;
+let suppressNextClick = false;
+
+let draggedType = null;
+let dragStartContainerPt = null;
+
+function enableFootprintDrag(poly, t){
+  poly.on('mousedown', function(e){
+    isDraggingFootprint = true;
+    draggedType = t;
+    dragStartLatLng = e.latlng;
+    dragStartContainerPt = e.containerPoint;
+    dragStartCenter = center.slice();
+    map.dragging.disable();
+    const el = map.getContainer();
+    el.style.cursor = 'move';
+    if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
+  });
+}
+
+// 유형별로 현재 선택된 층 (50평형만 1/2층 존재)
+let currentFloor = { 50: '1', 38: '1' };
+
+function updateFloorBtnVisibility(){
+  const wrap = document.getElementById('floorBtnWrap');
+  const typesToShow = compareMode ? [50,38] : [houseType];
+  const has2Floor = typesToShow.includes(50);
+  wrap.style.display = has2Floor ? 'flex' : 'none';
+}
+
+// 현재 footprint 폴리곤 꼭짓점(corners, [lng,lat] 4개)을 화면 픽셀로 변환해
+// 실제 도면 이미지를 정확한 크기/회전으로 지도 위에 겹쳐서 표시
+function addFloorplanOverlay(t, corners){
+  const imgs = FLOORPLAN_IMAGES[t];
+  if (!imgs) return null;
+  const floor = currentFloor[t] && imgs[currentFloor[t]] ? currentFloor[t] : Object.keys(imgs).sort()[0];
+  const src = imgs[floor];
+
+  const toPx = ([lng,lat]) => map.latLngToContainerPoint(L.latLng(lat,lng));
+  const p0 = toPx(corners[0]); // SW
+  const p1 = toPx(corners[1]); // SE
+  const p3 = toPx(corners[3]); // NW
+
+  const pixelW = Math.hypot(p1.x-p0.x, p1.y-p0.y);
+  const pixelH = Math.hypot(p3.x-p0.x, p3.y-p0.y);
+  const angleDeg = Math.atan2(p1.y-p0.y, p1.x-p0.x) * 180/Math.PI;
+
+  const centerLat = (corners[0][1]+corners[2][1])/2;
+  const centerLng = (corners[0][0]+corners[2][0])/2;
+
+  const marker = L.marker([centerLat, centerLng], {
+    icon: L.divIcon({
+      className: '',
+      iconSize: [pixelW, pixelH],
+      iconAnchor: [pixelW/2, pixelH/2],
+      html: `<img src="${src}" style="width:${pixelW}px;height:${pixelH}px;transform:rotate(${angleDeg}deg);transform-origin:center center;display:block;opacity:0.95;">`
+    }),
+    interactive: false
+  }).addTo(map);
+  return marker;
+}
+
+function initFootprintDragHandlers(){
+  map.on('mousemove', function(e){
+    if (!isDraggingFootprint) return;
+    const dLat = e.latlng.lat - dragStartLatLng.lat;
+    const dLng = e.latlng.lng - dragStartLatLng.lng;
+    center = [dragStartCenter[0] + dLat, dragStartCenter[1] + dLng];
+    drawFootprint();
+  });
+  map.on('mouseup', function(e){
+    if (!isDraggingFootprint) return;
+    isDraggingFootprint = false;
+    map.dragging.enable();
+    map.getContainer().style.cursor = '';
+    suppressNextClick = true;
+    setTimeout(()=>{ suppressNextClick = false; }, 50);
+  });
+  map.on('zoomend', ()=>{ if(center) drawFootprint(); });
+}
+
+function onMapClick(e){
+  if (suppressNextClick) return;
+  if (!placeMode) return;
+  center = [e.latlng.lat, e.latlng.lng];
+  drawFootprint();
+}
+
+// ---------- UI 이벤트 ----------
+document.getElementById('saveKeyBtn').addEventListener('click', ()=>{
+  apiKey = document.getElementById('apiKey').value.trim();
+  apiDomain = document.getElementById('apiDomain').value.trim() || 'localhost';
+  try{
+    localStorage.setItem('vworld_key', apiKey);
+    localStorage.setItem('vworld_domain', apiDomain);
+  }catch(e){}
+  setStatus('키가 저장되었습니다. "지도 불러오기"를 눌러 지도를 표출하세요.');
+});
+
+document.getElementById('loadMapBtn').addEventListener('click', ()=>{
+  if (!apiKey){
+    apiKey = document.getElementById('apiKey').value.trim();
+    apiDomain = document.getElementById('apiDomain').value.trim() || 'localhost';
+  }
+  if (!apiKey){ setStatus('API 키를 먼저 입력하세요.'); return; }
+  const type = document.querySelector('input[name=basetype]:checked').value;
+  addBaseLayer(type);
+  toggleCadastral(document.getElementById('cadastralChk').checked);
+  setStatus('지도를 불러왔습니다. 지도가 표시되지 않으면 키/도메인 설정을 확인하세요.');
+});
+
+document.querySelectorAll('input[name=basetype]').forEach(el=>{
+  el.addEventListener('change', ()=>{ if(apiKey) addBaseLayer(el.value); });
+});
+document.getElementById('cadastralChk').addEventListener('change', (e)=>{
+  if (apiKey) toggleCadastral(e.target.checked);
+});
+document.getElementById('gridChk').addEventListener('change', ()=>{ if(center) drawFootprint(); });
+document.getElementById('planChk').addEventListener('change', drawFootprint);
+document.getElementById('floorBtn1').addEventListener('click', ()=>{
+  currentFloor = { 50:'1', 38:'1' };
+  document.getElementById('floorBtn1').classList.add('active');
+  document.getElementById('floorBtn2').classList.remove('active');
+  drawFootprint();
+});
+document.getElementById('floorBtn2').addEventListener('click', ()=>{
+  currentFloor = { 50:'2', 38:'1' }; // 38평형은 단층이라 2층 없음, 항상 1
+  document.getElementById('floorBtn2').classList.add('active');
+  document.getElementById('floorBtn1').classList.remove('active');
+  drawFootprint();
+});
+
+document.getElementById('searchBtn').addEventListener('click', searchAddress);
+document.getElementById('addrInput').addEventListener('keydown', (e)=>{ if(e.key==='Enter') searchAddress(); });
+document.getElementById('clearParcelBtn').addEventListener('click', ()=>{ clearParcel(); setStatus('필지 표시를 지웠습니다.'); });
+
+document.getElementById('placeModeBtn').addEventListener('click', (e)=>{
+  placeMode = !placeMode;
+  e.target.classList.toggle('active', placeMode);
+  e.target.textContent = placeMode ? '📍 배치 위치 클릭 모드 (켜짐 - 지도를 클릭하세요)' : '📍 배치 위치 클릭 모드';
+});
+
+function selectType(sel, type){
+  document.querySelectorAll('.footprint-box > div').forEach(d=>d.classList.remove('sel'));
+  sel.classList.add('sel');
+  houseType = type;
+  document.getElementById('customPyeongWrap').style.display = type==='custom' ? 'block' : 'none';
+  document.getElementById('ratioWrap').style.display = type==='custom' ? 'block' : 'none';
+  compareMode = false;
+  drawFootprint();
+}
+document.getElementById('type50').addEventListener('click', (e)=>selectType(e.currentTarget,50));
+document.getElementById('type38').addEventListener('click', (e)=>selectType(e.currentTarget,38));
+document.getElementById('typeCustom').addEventListener('click', (e)=>selectType(e.currentTarget,'custom'));
+document.getElementById('customPyeong').addEventListener('input', drawFootprint);
+
+document.getElementById('ratioSlider').addEventListener('input', (e)=>{
+  document.getElementById('ratioLabel').textContent = `1 : ${(e.target.value/100).toFixed(2)}`;
+  drawFootprint();
+});
+document.getElementById('rotSlider').addEventListener('input', (e)=>{
+  document.getElementById('rotInput').value = e.target.value;
+  drawFootprint();
+});
+document.getElementById('rotInput').addEventListener('input', (e)=>{
+  let v = parseInt(e.target.value);
+  if (isNaN(v)) return;
+  v = ((v % 360) + 360) % 360; // 0~359로 정규화
+  document.getElementById('rotSlider').value = v;
+  drawFootprint();
+});
+
+document.getElementById('compareBtn').addEventListener('click', ()=>{
+  compareMode = !compareMode;
+  document.getElementById('compareBtn').classList.toggle('active', compareMode);
+  drawFootprint();
+});
+document.getElementById('resetPlacementBtn').addEventListener('click', ()=>{
+  center = null;
+  footprintLayers.forEach(l=>map.removeLayer(l));
+  footprintLayers = [];
+  document.getElementById('result').innerHTML = '아직 배치되지 않았습니다.';
+  document.getElementById('result').className = 'neutral';
+});
+
+// ---------- 시작 ----------
+try{
+  const savedKey = localStorage.getItem('vworld_key');
+  const savedDomain = localStorage.getItem('vworld_domain');
+  if (savedKey){ document.getElementById('apiKey').value = savedKey; apiKey = savedKey; }
+  if (savedDomain){ document.getElementById('apiDomain').value = savedDomain; apiDomain = savedDomain; }
+}catch(e){}
+document.getElementById('ratioWrap').style.display = houseType==='custom' ? 'block' : 'none';
+initMap();
+updateFloorBtnVisibility();
+</script>
+</body>
+</html>
