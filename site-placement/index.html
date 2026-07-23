@@ -59,20 +59,17 @@
 <div id="app">
   <div id="sidebar">
     <h1>🏠 표준주택 필지 배치 시뮬레이터</h1>
-    <div class="small">VWorld Open API 기반 · 로컬 실행용</div>
+    <div class="small">VWorld Open API 기반</div>
 
-    <h2>1. API 인증</h2>
-    <label>VWorld 인증키 (apiKey)</label>
-    <input type="text" id="apiKey" placeholder="발급받은 인증키 붙여넣기">
-    <label>등록 도메인 (domain)</label>
-    <input type="text" id="apiDomain" placeholder="예: localhost" value="localhost">
-    <div class="small">키 발급 시 등록한 도메인과 실제 실행 환경(브라우저 주소)의 도메인이 일치해야 지도/데이터가 정상 표출됩니다.</div>
-    <div class="row" style="margin-top:8px;">
+    <!-- 공개 배포판: API 키는 코드에 고정되어 자동 로드되므로 입력 UI는 숨김 -->
+    <div style="display:none">
+      <input type="text" id="apiKey" value="">
+      <input type="text" id="apiDomain" value="">
       <button id="saveKeyBtn">키 저장</button>
-      <button id="loadMapBtn" class="btn-primary">지도 불러오기</button>
+      <button id="loadMapBtn">지도 불러오기</button>
     </div>
 
-    <h2>2. 주소/지번 검색</h2>
+    <h2>1. 주소/지번 검색</h2>
     <input type="text" id="addrInput" placeholder="예: 서울특별시 송파구 중대로 135">
     <div class="row" style="margin-top:6px;">
       <button id="searchBtn" class="btn-primary">필지 검색</button>
@@ -80,12 +77,12 @@
     </div>
     <div id="status">검색 결과가 여기에 표시됩니다.</div>
 
-    <h2>3. 배경 레이어</h2>
+    <h2>2. 배경 레이어</h2>
     <label class="layerchk"><input type="radio" name="basetype" value="Base" checked> 일반 배경지도</label>
     <label class="layerchk"><input type="radio" name="basetype" value="Satellite"> 위성지도</label>
     <label class="layerchk"><input type="checkbox" id="cadastralChk" checked> 연속지적도(WMS) 표시</label>
 
-    <h2>4. 건물 배치</h2>
+    <h2>3. 건물 배치</h2>
     <div class="small">지도에서 배치할 위치를 클릭하세요 (배치모드 켜짐 시). 배치 후에는 사각형을 <b>마우스로 드래그</b>해서 위치를 미세 조정하거나, <b>제자리에서 클릭</b>하면 실제 평면도를 볼 수 있습니다.</div>
     <div class="row" style="margin-top:6px;">
       <button id="placeModeBtn" class="btn-toggle">📍 배치 위치 클릭 모드</button>
@@ -156,8 +153,10 @@ const REAL_FOOTPRINTS = {
         gridX_mm: [0,3700,5500,9200,13400,17100] } // X1~X6 그리드 (도면 실측)
 };
 
-let apiKey = "";
-let apiDomain = "localhost";
+// 방문자가 직접 입력할 필요 없도록 배포된 도메인용 키를 코드에 고정.
+// VWorld 키는 발급 시 등록한 도메인에서만 동작하므로(도메인 화이트리스트), 공개 노출되어도 안전합니다.
+let apiKey = "542D00F7-9250-348B-8FF9-D212AABF574D";
+let apiDomain = "standard-housing-site.onrender.com";
 let map, baseLayer, cadastralLayer;
 let parcelLayer = null;   // 검색된 필지 경계 폴리곤 (leaflet layer)
 let parcelPolygons = [];  // [[ [lng,lat], ... ], ...] 좌표 배열 (판정용)
@@ -752,15 +751,14 @@ document.getElementById('resetPlacementBtn').addEventListener('click', ()=>{
 });
 
 // ---------- 시작 ----------
-try{
-  const savedKey = localStorage.getItem('vworld_key');
-  const savedDomain = localStorage.getItem('vworld_domain');
-  if (savedKey){ document.getElementById('apiKey').value = savedKey; apiKey = savedKey; }
-  if (savedDomain){ document.getElementById('apiDomain').value = savedDomain; apiDomain = savedDomain; }
-}catch(e){}
+// 공개 배포판: 키 입력 없이 바로 배경지도/지적도 자동 로드
 document.getElementById('ratioWrap').style.display = houseType==='custom' ? 'block' : 'none';
 initMap();
 updateFloorBtnVisibility();
+const initialBaseType = document.querySelector('input[name=basetype]:checked').value;
+addBaseLayer(initialBaseType);
+toggleCadastral(document.getElementById('cadastralChk').checked);
+setStatus('지도가 자동으로 로드되었습니다. 주소를 검색해 보세요.');
 </script>
 </body>
 </html>
