@@ -53,11 +53,12 @@
   .local-tab:hover { color:var(--primary); }
   .local-tab.active { color:var(--primary); border-bottom-color:var(--primary); }
   .local-tab-cta {
-    margin-left:auto; align-self:center;
+    align-self:center;
     background:var(--primary); color:#fff !important; border-radius:8px;
     padding:9px 18px; border-bottom:none !important;
   }
   .local-tab-cta:hover { background:var(--primary-light); color:#fff; }
+  .tab-cta-group { display:flex; gap:8px; margin-left:auto; align-items:center; }
 
   /* HERO IMAGE (placeholder) */
   .hero-photo {
@@ -77,6 +78,27 @@
   .info-table th { background:#e8f5ee; color:var(--primary); font-weight:700; padding:10px 8px; text-align:center; border:1px solid var(--border); }
   .info-table td { padding:9px 8px; text-align:center; border:1px solid var(--border); color:var(--text); }
   .info-table td.left { text-align:left; }
+
+  /* 제원 페이지 전용 */
+  .spec-panel { display:none; }
+  .spec-panel.active { display:block; }
+  .energy-stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .energy-stats .stat { flex:1; min-width:140px; background:var(--bg); border-radius:14px; padding:20px; text-align:center; }
+  .energy-stats .stat-val { font-size:28px; font-weight:800; color:var(--primary); }
+  .energy-stats .stat-label { font-size:12.5px; color:var(--text-sub); margin-top:6px; line-height:1.5; }
+  .layer-stack { list-style:none; padding:0; margin:0; counter-reset:layer; }
+  .layer-stack li {
+    counter-increment:layer; display:flex; align-items:center; gap:12px;
+    padding:9px 0; border-bottom:1px solid #f1f5f9; font-size:13.5px; color:var(--text);
+  }
+  .layer-stack li:first-child { font-weight:700; color:var(--primary); }
+  .layer-stack li::before {
+    content:counter(layer); flex:none; width:22px; height:22px; border-radius:50%;
+    background:var(--bg); color:var(--primary); font-size:11px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; border:1px solid var(--border);
+  }
+  .u-value { margin-top:16px; padding:14px 18px; background:var(--bg); border-radius:12px; font-size:14px; color:var(--text); }
+  .u-value b { color:var(--primary); font-size:20px; margin:0 4px; }
   .coming-soon { background:#fff; border-radius:20px; padding:60px 32px; text-align:center; box-shadow:0 2px 12px rgba(0,0,0,0.06); }
   .coming-soon .icon { font-size:40px; margin-bottom:16px; }
   .coming-soon h3 { font-size:20px; font-weight:700; margin-bottom:10px; }
@@ -111,7 +133,7 @@
   .feat-desc { font-size:12px; color:var(--text-sub); margin-top:4px; }
 
   /* STEP CARDS */
-  .page-content { flex:1; padding:40px 28px; max-width:960px; margin:0 auto; width:100%; }
+  .page-content { flex:1; padding:40px 28px; max-width:1400px; margin:0 auto; width:100%; }
   .section-title { font-family:'Montserrat',sans-serif; font-size:28px; font-weight:800; color:var(--text); margin-bottom:8px; }
   .section-sub { font-size:15px; color:var(--text-sub); margin-bottom:36px; }
   .type-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
@@ -230,18 +252,20 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="nav-utility-link" onclick="goTo('page-site-placement')">내 땅에 배치해보기</button>
     </div>
   </nav>
-  <div class="local-tabs" id="mainTabs">
-    <button class="local-tab active" onclick="goToTab('page-landing', this)">홈</button>
-    <button class="local-tab" onclick="goToTab('page-features', this)">특징</button>
-    <button class="local-tab" onclick="goToTab('page-specs', this)">제원</button>
-    <button class="local-tab" onclick="goToTab('page-gallery', this)">갤러리</button>
-    <button class="local-tab" onclick="goToTab('page-structure-guide', this)">모델비교</button>
-    <button class="local-tab" onclick="goToTab('page-price', this)">가격</button>
-    <button class="local-tab local-tab-cta" onclick="goToTab('page-type-select', this)">견적내기</button>
-  </div>
+  <div class="local-tabs">
+      <button class="local-tab active" onmousedown="goToTab('page-landing', this)">홈</button>
+      <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
+      <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
+      <div class="tab-cta-group">
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+      </div>
+    </div>
   <div class="landing-hero">
     <div class="landing-badge">Passive House Institute Korea</div>
     <h1 class="landing-title">검증된 표준주택,<br><span class="hl">직접 설계</span>하세요</h1>
@@ -249,7 +273,7 @@
     <div class="hero-photo" style="background:none;padding:0;overflow:hidden;">
       <img src="hero_photo.png" alt="PHIKO 표준주택" style="width:100%;height:100%;object-fit:cover;display:block;">
     </div>
-    <button class="btn-start" onclick="goTo('page-type-select')">표준주택 설계 시작하기</button>
+    <button class="btn-start" onmousedown="goTo('page-type-select')">표준주택 설계 시작하기</button>
     <div class="landing-features">
       <div class="feat-card">
         <div class="feat-icon">
@@ -290,18 +314,21 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
     </div>
   </nav>
   <div class="local-tabs">
-    <button class="local-tab" onclick="goToTab('page-landing', this)">홈</button>
-    <button class="local-tab" onclick="goToTab('page-features', this)">특징</button>
-    <button class="local-tab" onclick="goToTab('page-specs', this)">제원</button>
-    <button class="local-tab" onclick="goToTab('page-gallery', this)">갤러리</button>
-    <button class="local-tab" onclick="goToTab('page-structure-guide', this)">모델비교</button>
-    <button class="local-tab" onclick="goToTab('page-price', this)">가격</button>
-    <button class="local-tab local-tab-cta" onclick="goToTab('page-type-select', this)">견적내기</button>
-  </div>
+      <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
+      <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
+      <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
+      <div class="tab-cta-group">
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+      </div>
+    </div>
   <iframe src="site-placement/index.html" style="flex:1;width:100%;border:none;display:block;"></iframe>
 </div>
 
@@ -309,18 +336,21 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
     </div>
   </nav>
   <div class="local-tabs">
-    <button class="local-tab" onclick="goToTab('page-landing', this)">홈</button>
-    <button class="local-tab" onclick="goToTab('page-features', this)">특징</button>
-    <button class="local-tab" onclick="goToTab('page-specs', this)">제원</button>
-    <button class="local-tab" onclick="goToTab('page-gallery', this)">갤러리</button>
-    <button class="local-tab active" onclick="goToTab('page-structure-guide', this)">모델비교</button>
-    <button class="local-tab" onclick="goToTab('page-price', this)">가격</button>
-    <button class="local-tab local-tab-cta" onclick="goToTab('page-type-select', this)">견적내기</button>
-  </div>
+      <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
+      <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab active" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
+      <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
+      <div class="tab-cta-group">
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+      </div>
+    </div>
   <iframe src="structure-guide/index.html" style="flex:1;width:100%;border:none;display:block;"></iframe>
 </div>
 
@@ -331,18 +361,21 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
     </div>
   </nav>
   <div class="local-tabs">
-    <button class="local-tab" onclick="goToTab('page-landing', this)">홈</button>
-    <button class="local-tab active" onclick="goToTab('page-features', this)">특징</button>
-    <button class="local-tab" onclick="goToTab('page-specs', this)">제원</button>
-    <button class="local-tab" onclick="goToTab('page-gallery', this)">갤러리</button>
-    <button class="local-tab" onclick="goToTab('page-structure-guide', this)">모델비교</button>
-    <button class="local-tab" onclick="goToTab('page-price', this)">가격</button>
-    <button class="local-tab local-tab-cta" onclick="goToTab('page-type-select', this)">견적내기</button>
-  </div>
+      <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
+      <button class="local-tab active" onmousedown="goToTab('page-features', this)">특징</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
+      <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
+      <div class="tab-cta-group">
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+      </div>
+    </div>
   <div class="page-content">
     <div class="info-card">
       <h3>PHIKO 표준주택 2026 개요 <span style="font-size:12px;color:var(--text-sub);font-weight:400;">[2026.03.17 시행]</span></h3>
@@ -445,23 +478,129 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
     </div>
   </nav>
   <div class="local-tabs">
-    <button class="local-tab" onclick="goToTab('page-landing', this)">홈</button>
-    <button class="local-tab" onclick="goToTab('page-features', this)">특징</button>
-    <button class="local-tab active" onclick="goToTab('page-specs', this)">제원</button>
-    <button class="local-tab" onclick="goToTab('page-gallery', this)">갤러리</button>
-    <button class="local-tab" onclick="goToTab('page-structure-guide', this)">모델비교</button>
-    <button class="local-tab" onclick="goToTab('page-price', this)">가격</button>
-    <button class="local-tab local-tab-cta" onclick="goToTab('page-type-select', this)">견적내기</button>
-  </div>
+      <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
+      <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
+      <button class="local-tab active" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
+      <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
+      <div class="tab-cta-group">
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+      </div>
+    </div>
   <div class="page-content">
-    <div class="coming-soon">
-      <div class="icon">📐</div>
-      <h3>제원 (준비중)</h3>
-      <p>구조 유형별 평형, 면적, 층수, 단열 성능 등 상세 제원표가 들어갈 자리입니다.<br>실제 수치 자료를 주시면 표로 정리해 넣겠습니다.</p>
+    <div class="info-card">
+      <h3>구조 선택</h3>
+      <div class="tab-bar" id="specStructTabs">
+        <button class="tab-btn active" onmousedown="switchSpecStruct('lightwood', this)">경량목구조</button>
+        <button class="tab-btn" onmousedown="switchSpecStruct('rc', this)">RC(철근콘크리트)</button>
+        <button class="tab-btn" onmousedown="switchSpecStruct('steel', this)">경량철골(스틸)</button>
+        <button class="tab-btn" onmousedown="switchSpecStruct('alc', this)">블록구조(ALC)</button>
+        <button class="tab-btn" onmousedown="switchSpecStruct('heavywood', this)">중목구조</button>
+      </div>
+    </div>
+
+    <!-- 경량목구조: 실제 자료 반영 -->
+    <div id="spec-panel-lightwood" class="spec-panel active">
+      <div class="info-card">
+        <h3>에너지 성능 요약</h3>
+        <div class="energy-stats">
+          <div class="stat"><div class="stat-val">42.06</div><div class="stat-label">난방에너지요구량<br>kWh/㎡·a</div></div>
+          <div class="stat"><div class="stat-val">198</div><div class="stat-label">1차에너지소요량<br>kWh/㎡·a</div></div>
+          <div class="stat"><div class="stat-val">9</div><div class="stat-label">태양광발전 용량<br>kWp</div></div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3>지붕구성</h3>
+        <p style="font-size:12.5px;color:var(--text-sub);margin-bottom:8px;">바깥쪽 → 안쪽 순</p>
+        <ol class="layer-stack">
+          <li>THK0.5 칼라강판</li>
+          <li>델타멤브레인</li>
+          <li>방수시트</li>
+          <li>THK11.1 OSB</li>
+          <li>2'x4' 통기층</li>
+          <li>투습방수지(지붕용)</li>
+          <li>2'x4' 각재 (THK38 글라스울 32K)</li>
+          <li>구조목 2'x12' (THK286 글라스울 40K)</li>
+          <li>가변형방습지(기밀층)</li>
+          <li>설비층</li>
+          <li>석고보드2겹/벽지</li>
+        </ol>
+        <div class="u-value">지붕 열관류율 <b>0.129</b> W/㎡·K</div>
+      </div>
+
+      <div class="info-card">
+        <h3>벽체구성 (외벽)</h3>
+        <p style="font-size:12.5px;color:var(--text-sub);margin-bottom:8px;">바깥쪽 → 안쪽 순</p>
+        <ol class="layer-stack">
+          <li>메쉬미장/타일벽돌</li>
+          <li>T6시멘트보드</li>
+          <li>통기층</li>
+          <li>투습방수지</li>
+          <li>가로각재/THK38그라스울32K</li>
+          <li>세로각재/THK38그라스울32K</li>
+          <li>THK11.1 OSB</li>
+          <li>STUD/THK140 그라스울40K</li>
+          <li>가변형방습지</li>
+          <li>설비층</li>
+          <li>석고보드2겹/벽지</li>
+        </ol>
+        <div class="u-value">외벽 열관류율 <b>0.196</b> W/㎡·K</div>
+      </div>
+
+      <div class="info-card">
+        <h3>바닥구성</h3>
+        <p style="font-size:12.5px;color:var(--text-sub);margin-bottom:8px;">위(실내) → 아래 순</p>
+        <ol class="layer-stack">
+          <li>원목마루</li>
+          <li>THK40 시멘트몰탈(난방배관)</li>
+          <li>PE필름</li>
+          <li>THK50 비드법보온판 2종1호 '가'등급</li>
+          <li>콘크리트</li>
+          <li>PE 필름 2겹(분리층)</li>
+          <li>THK150 압출법보온판 특호</li>
+          <li>THK50~100 무근콘크리트</li>
+          <li>PE 필름 2겹(방습층)</li>
+          <li>THK200 잡석다짐</li>
+        </ol>
+        <div class="u-value">바닥 열관류율 <b>0.092</b> W/㎡·K</div>
+      </div>
+    </div>
+
+    <!-- 나머지 구조: 자료 준비중 -->
+    <div id="spec-panel-rc" class="spec-panel">
+      <div class="coming-soon">
+        <div class="icon">📐</div>
+        <h3>RC(철근콘크리트) 제원 (준비중)</h3>
+        <p>지붕·벽체·바닥 구성 및 에너지 성능 자료를 주시면 채워 넣겠습니다.</p>
+      </div>
+    </div>
+    <div id="spec-panel-steel" class="spec-panel">
+      <div class="coming-soon">
+        <div class="icon">📐</div>
+        <h3>경량철골(스틸) 제원 (준비중)</h3>
+        <p>지붕·벽체·바닥 구성 및 에너지 성능 자료를 주시면 채워 넣겠습니다.</p>
+      </div>
+    </div>
+    <div id="spec-panel-alc" class="spec-panel">
+      <div class="coming-soon">
+        <div class="icon">📐</div>
+        <h3>블록구조(ALC) 제원 (준비중)</h3>
+        <p>지붕·벽체·바닥 구성 및 에너지 성능 자료를 주시면 채워 넣겠습니다.</p>
+      </div>
+    </div>
+    <div id="spec-panel-heavywood" class="spec-panel">
+      <div class="coming-soon">
+        <div class="icon">📐</div>
+        <h3>중목구조 제원 (준비중)</h3>
+        <p>지붕·벽체·바닥 구성 및 에너지 성능 자료를 주시면 채워 넣겠습니다.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -473,18 +612,21 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
     </div>
   </nav>
   <div class="local-tabs">
-    <button class="local-tab" onclick="goToTab('page-landing', this)">홈</button>
-    <button class="local-tab" onclick="goToTab('page-features', this)">특징</button>
-    <button class="local-tab" onclick="goToTab('page-specs', this)">제원</button>
-    <button class="local-tab active" onclick="goToTab('page-gallery', this)">갤러리</button>
-    <button class="local-tab" onclick="goToTab('page-structure-guide', this)">모델비교</button>
-    <button class="local-tab" onclick="goToTab('page-price', this)">가격</button>
-    <button class="local-tab local-tab-cta" onclick="goToTab('page-type-select', this)">견적내기</button>
-  </div>
+      <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
+      <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
+      <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab active" onmousedown="goToTab('page-gallery', this)">갤러리</button>
+      <div class="tab-cta-group">
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+      </div>
+    </div>
   <div class="page-content">
     <div class="info-card" style="text-align:center;">
       <h3 style="margin-bottom:8px;">표준주택 시공 사례</h3>
@@ -501,18 +643,21 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
     </div>
   </nav>
   <div class="local-tabs">
-    <button class="local-tab" onclick="goToTab('page-landing', this)">홈</button>
-    <button class="local-tab" onclick="goToTab('page-features', this)">특징</button>
-    <button class="local-tab" onclick="goToTab('page-specs', this)">제원</button>
-    <button class="local-tab" onclick="goToTab('page-gallery', this)">갤러리</button>
-    <button class="local-tab" onclick="goToTab('page-structure-guide', this)">모델비교</button>
-    <button class="local-tab active" onclick="goToTab('page-price', this)">가격</button>
-    <button class="local-tab local-tab-cta" onclick="goToTab('page-type-select', this)">견적내기</button>
-  </div>
+      <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
+      <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
+      <button class="local-tab active" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
+      <div class="tab-cta-group">
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+      </div>
+    </div>
   <div class="page-content">
     <div class="info-card">
       <h3>구조·타입별 2026년 계약금액</h3>
@@ -534,6 +679,7 @@
       </table>
       <p class="info-note">※ 블록구조(ALC), 일반목구조(중목구조)는 별도 협의 후 계약금액이 결정됩니다.</p>
       <p class="info-note">※ 위 금액에는 ZEB 인증, KOLAS 기밀테스트, 인허가 절차가 포함되어 있습니다 (자세한 내용은 "특징" 탭 참고).</p>
+      <p class="info-note">※ <b>부대토목공사, 기타 인입비용, 설계변경, 내외장 마감재, 가구/조명</b>은 위 계약금액에 포함되지 않은 별도 항목입니다.</p>
     </div>
 
     <div class="info-card">
@@ -557,17 +703,6 @@
       <p class="info-note">단위: 원 · RC/스틸구조 부대비용은 관리비·예치금 비율이 다르게 적용됩니다 (전체 내역은 원본 엑셀 참고).</p>
     </div>
 
-    <div class="info-card">
-      <h3>창호 업체별 비용 비교 (엔썸 / 살라만다 / 레하우)</h3>
-      <table class="info-table">
-        <tr><th>타입</th><th>엔썸</th><th>살라만다</th><th>레하우</th></tr>
-        <tr><td>38-S</td><td>21,237,150원</td><td>16,605,898원</td><td>23,309,000원</td></tr>
-        <tr><td>38-W</td><td>21,994,280원</td><td>17,320,588원</td><td>24,211,000원</td></tr>
-        <tr><td>50D-S</td><td>27,054,280원</td><td>20,327,703원</td><td>28,435,000원</td></tr>
-        <tr><td>50D-W</td><td>28,568,540원</td><td>21,431,117원</td><td>30,239,000원</td></tr>
-      </table>
-      <p class="info-note">견적 기준 금액이며, 창호 업체 선택에 따라 위 금액이 계약금액에 가감됩니다.</p>
-    </div>
   </div>
 </div>
 
@@ -578,14 +713,14 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
     </div>
   </nav>
   <div class="page-content">
     <div class="section-title">주택 유형 선택</div>
     <div class="section-sub">원하시는 주택 유형을 선택해 주세요.</div>
     <div class="type-grid">
-      <div class="type-card" onclick="goTo('page-standard-select')">
+      <div class="type-card" onmousedown="goTo('page-standard-select')">
         <div class="type-card-icon">
           <svg viewBox="0 0 48 48" fill="none">
             <path d="M8 20L24 8l16 12v20H8z" fill="#1B5E3B" opacity=".8"/>
@@ -595,7 +730,7 @@
         <h3>스탠다드형</h3>
         <p>PHIKO 검증 완료된 표준 설계 모델.<br>빠르고 안전하게 시작하세요.</p>
       </div>
-      <div class="type-card" onclick="goTo('page-custom-select')">
+      <div class="type-card" onmousedown="goTo('page-custom-select')">
         <div class="type-card-icon">
           <svg viewBox="0 0 48 48" fill="none">
             <circle cx="24" cy="24" r="14" fill="#f59e0b" opacity=".7"/>
@@ -617,8 +752,8 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
-      <button class="btn-back" onclick="goTo('page-type-select')">이전</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
+      <button class="btn-back" onmousedown="goTo('page-type-select')">이전</button>
     </div>
   </nav>
   <div class="page-content">
@@ -657,8 +792,8 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
-      <button class="btn-back" onclick="goTo('page-standard-select')">이전</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
+      <button class="btn-back" onmousedown="goTo('page-standard-select')">이전</button>
     </div>
   </nav>
   <div class="page-content" style="max-width:800px;">
@@ -668,7 +803,7 @@
       <canvas id="standard-canvas"></canvas>
     </div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="goTo('page-care')">Care+ 서비스 선택</button>
+      <button class="btn-primary" onmousedown="goTo('page-care')">Care+ 서비스 선택</button>
     </div>
   </div>
 </div>
@@ -680,8 +815,8 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
-      <button class="btn-back" onclick="goTo('page-type-select')">이전</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
+      <button class="btn-back" onmousedown="goTo('page-type-select')">이전</button>
     </div>
   </nav>
   <div class="page-content">
@@ -740,8 +875,8 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
-      <button class="btn-back" onclick="goTo('page-custom-select')">이전</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
+      <button class="btn-back" onmousedown="goTo('page-custom-select')">이전</button>
     </div>
   </nav>
   <div class="page-content" style="max-width:1560px;">
@@ -754,7 +889,7 @@
           <canvas id="custom-canvas"></canvas>
         </div>
         <div class="btn-row">
-          <button class="btn-primary" onclick="goTo('page-care')">커스터마이징 완료 - Care+ 선택</button>
+          <button class="btn-primary" onmousedown="goTo('page-care')">커스터마이징 완료 - Care+ 선택</button>
         </div>
       </div>
       <!-- 옵션 패널 -->
@@ -853,8 +988,8 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
-      <button class="btn-back" onclick="goTo('page-custom-select')">이전</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
+      <button class="btn-back" onmousedown="goTo('page-custom-select')">이전</button>
     </div>
   </nav>
   <div class="page-content" style="max-width:1560px;">
@@ -866,7 +1001,7 @@
           <canvas id="other-canvas"></canvas>
         </div>
         <div class="btn-row">
-          <button class="btn-primary" onclick="goTo('page-care')">커스터마이징 완료 - Care+ 선택</button>
+          <button class="btn-primary" onmousedown="goTo('page-care')">커스터마이징 완료 - Care+ 선택</button>
         </div>
       </div>
       <div class="custom-panel">
@@ -896,8 +1031,8 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
-      <button class="btn-back" id="care-back-btn" onclick="goToCareBack()">이전</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
+      <button class="btn-back" id="care-back-btn" onmousedown="goToCareBack()">이전</button>
     </div>
   </nav>
   <div class="page-content">
@@ -940,7 +1075,7 @@
       </div>
     </div>
     <div class="btn-row" style="max-width:400px;">
-      <button class="btn-primary" onclick="goTo('page-contract')">계약서 확인</button>
+      <button class="btn-primary" onmousedown="goTo('page-contract')">계약서 확인</button>
     </div>
   </div>
 </div>
@@ -952,8 +1087,8 @@
   <nav class="top-nav">
     <div class="nav-logo">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onclick="goTo('page-landing')">Home</button>
-      <button class="btn-back" onclick="goTo('page-care')">이전</button>
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
+      <button class="btn-back" onmousedown="goTo('page-care')">이전</button>
     </div>
   </nav>
   <div class="page-content" style="max-width:720px;">
@@ -990,7 +1125,7 @@
       </div>
     </div>
     <div class="btn-row" style="margin-top:28px;">
-      <button class="btn-secondary" onclick="goTo('page-landing')">처음으로</button>
+      <button class="btn-secondary" onmousedown="goTo('page-landing')">처음으로</button>
       <button class="btn-primary" onclick="alert('계약 신청이 완료되었습니다. 담당자가 연락드립니다.')">계약 신청 완료</button>
     </div>
   </div>
@@ -1033,6 +1168,15 @@ function goToTab(pageId, btnEl) {
     if(bar) bar.querySelectorAll('.local-tab').forEach(t => t.classList.remove('active'));
     btnEl.classList.add('active');
   }
+}
+
+// 제원 페이지: 구조 선택 탭 전환
+function switchSpecStruct(type, btnEl) {
+  document.querySelectorAll('#page-specs .spec-panel').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('spec-panel-' + type);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('#specStructTabs .tab-btn').forEach(b => b.classList.remove('active'));
+  if(btnEl) btnEl.classList.add('active');
 }
 
 // ============================================================
@@ -1336,18 +1480,7 @@ function initCustomRcViewer() {
     function(gltf) {
       const model = gltf.scene;
 
-      // 실측 대지/정원(Soil, garden) 메쉬는 건물보다 훨씬 커서(수십 미터) 그대로 두면
-      // 전체 크기 기준 자동축소 시 건물이 점처럼 작아져 버림 -> 먼저 제거
-      const GROUND_MATERIALS = ['Soil_04_1K', 'garden'];
-      const toRemove = [];
-      model.traverse(function(child) {
-        if(child.isMesh && GROUND_MATERIALS.includes((child.material && child.material.name) || '')) {
-          toRemove.push(child);
-        }
-      });
-      toRemove.forEach(function(child) { if(child.parent) child.parent.remove(child); });
-
-      // 바운딩박스 계산 후 중앙 정렬 (지형 제거한 뒤 계산)
+      // 바운딩박스 계산 후 중앙 정렬
       const box = new THREE.Box3().setFromObject(model);
       const center = box.getCenter(new THREE.Vector3());
       model.position.sub(center);
@@ -1357,20 +1490,17 @@ function initCustomRcViewer() {
 
       model.traverse(function(child) {
         if(!child.isMesh) return;
-        const matName = (child.material && child.material.name) || '';
-        // 36D-A-S 모델: 지붕/벽체를 mesh 이름이 아닌 재질(material) 이름으로 판별
-        const ROOF_MATERIALS = ['M07_Charcoal_Gleam', 'M08_Obsidian_Black'];
-        const WALL_MATERIALS = ['FrontColor', 'Brick_01_1K'];
-        if(ROOF_MATERIALS.includes(matName)) {
+        const name = child.name || '';
+        if(name === 'Roof') {
           rcRoofMeshes.push(child);
           child.material = child.material.clone();
           child.material.color.set(state.roofColor);
-        } else if(WALL_MATERIALS.includes(matName)) {
+        } else if(name === 'Wall') {
           rcWallMeshes.push(child);
           child.material = child.material.clone();
           child.material.color.set(state.wallColor);
         }
-        // 대지·바닥·유리·조경 등 나머지 mesh는 원본 색상 유지
+        // 대지·바닥·내벽·가구 등 나머지 mesh는 원본 색상 유지
       });
 
       // roof/wall 이름을 가진 mesh가 하나도 없는 경우에만 폴백 처리
