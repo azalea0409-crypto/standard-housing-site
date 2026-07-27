@@ -257,7 +257,7 @@
   <div class="local-tabs">
       <button class="local-tab active" onmousedown="goToTab('page-landing', this)">홈</button>
       <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
-      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
@@ -320,7 +320,7 @@
   <div class="local-tabs">
       <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
       <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
-      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
@@ -342,7 +342,7 @@
   <div class="local-tabs">
       <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
       <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
-      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab active" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
@@ -367,7 +367,7 @@
   <div class="local-tabs">
       <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
       <button class="local-tab active" onmousedown="goToTab('page-features', this)">특징</button>
-      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
@@ -484,7 +484,7 @@
   <div class="local-tabs">
       <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
       <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
-      <button class="local-tab active" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab active" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
@@ -494,8 +494,32 @@
       </div>
     </div>
   <div class="page-content">
+    <!-- Zone 1: 에너지 성능 기준 (공통, 구조 무관) -->
     <div class="info-card">
-      <h3>구조 선택</h3>
+      <h3>에너지 성능 기준 <span style="font-size:12px;color:var(--text-sub);font-weight:400;">PHIKO v2.2 표준 · 모든 구조 공통</span></h3>
+      <p style="font-size:14px;color:var(--primary);font-weight:700;margin-bottom:4px;">"사계절 내내 쾌적하게, 에너지 비용 걱정 없는 집"</p>
+      <p style="font-size:13.5px;color:var(--text-sub);margin-bottom:18px;">협회 표준주택은 엄격한 패시브하우스 기술을 적용하여 1년 내내 적정한 온도와 습도를 유지하며, 기존 일반 주택 대비 냉·난방 에너지 사용량을 대폭 절감합니다.</p>
+      <div class="energy-stats" style="margin-bottom:18px;">
+        <div class="stat"><div class="stat-val">&lt;50</div><div class="stat-label">연간 냉·난방 요구량<br>kWh/㎡·a</div></div>
+        <div class="stat"><div class="stat-val">&lt;0.6</div><div class="stat-label">기밀성능 (n50)<br>/h</div></div>
+        <div class="stat"><div class="stat-val">&lt;0.8</div><div class="stat-label">창세트 열관류율 (Uw)<br>W/㎡·K</div></div>
+      </div>
+      <table class="info-table">
+        <tr><th>구분</th><th>평가 항목</th><th>표준 성능 기준</th><th>비고 / 적용 스펙</th></tr>
+        <tr><td>에너지</td><td class="left">연간 냉·난방 요구량 총합</td><td>&lt; 50 kWh/(㎡·a)<br>(&lt; 5.0 L)</td><td class="left">Classic 기준</td></tr>
+        <tr><td>단열</td><td class="left">외피 복합 열관류율 (U)</td><td>&lt; 0.17~0.25 W/(㎡·K)</td><td class="left">중부1: 0.17 / 중부2: 0.21 / 남부·제주: 0.25</td></tr>
+        <tr><td>단열</td><td class="left">실내측 최저 표면온도</td><td>&gt; 12.6℃</td><td class="left">결로 및 곰팡이 방지 최저 기준</td></tr>
+        <tr><td>기밀</td><td class="left">가·감압 평균 기밀성능 (n50)</td><td>&lt; 0.6/h</td><td class="left">50Pa 압력차 하 환기횟수</td></tr>
+        <tr><td>열교</td><td class="left">선형/점형 열교</td><td>Ψ &lt; 0.33 W/(m·K)<br>χ &lt; 0.02 W/K</td><td class="left">열교 최적화 상세설계 적용</td></tr>
+        <tr><td>창호</td><td class="left">창세트 열관류율 (Uw)</td><td>&lt; 0.8 W/(㎡·K)</td><td class="left">로이삼중유리 + 단열간봉 적용</td></tr>
+        <tr><td>차양</td><td class="left">외부 일사조절장치</td><td>필수 설치</td><td class="left">북/북서/북동측 제외 전 창호</td></tr>
+      </table>
+    </div>
+
+    <!-- Zone 2: 구조 선택 + 부위별 동적 구성 -->
+    <div class="info-card">
+      <h3>구조별 부위 구성</h3>
+      <p style="font-size:12.5px;color:var(--text-sub);margin-bottom:12px;">레이어 순서 표기: 바깥쪽 → 안쪽 순</p>
       <div class="tab-bar" id="specStructTabs">
         <button class="tab-btn active" onmousedown="switchSpecStruct('lightwood', this)">경량목구조</button>
         <button class="tab-btn" onmousedown="switchSpecStruct('rc', this)">RC(철근콘크리트)</button>
@@ -505,102 +529,114 @@
       </div>
     </div>
 
-    <!-- 경량목구조: 실제 자료 반영 -->
+    <!-- 경량목구조 -->
     <div id="spec-panel-lightwood" class="spec-panel active">
       <div class="info-card">
-        <h3>에너지 성능 요약</h3>
-        <div class="energy-stats">
-          <div class="stat"><div class="stat-val">42.06</div><div class="stat-label">난방에너지요구량<br>kWh/㎡·a</div></div>
-          <div class="stat"><div class="stat-val">198</div><div class="stat-label">1차에너지소요량<br>kWh/㎡·a</div></div>
-          <div class="stat"><div class="stat-val">9</div><div class="stat-label">태양광발전 용량<br>kWp</div></div>
-        </div>
-      </div>
-
-      <div class="info-card">
-        <h3>지붕구성</h3>
-        <p style="font-size:12.5px;color:var(--text-sub);margin-bottom:8px;">바깥쪽 → 안쪽 순</p>
+        <h3>지붕 구성</h3>
         <ol class="layer-stack">
           <li>THK0.5 칼라강판</li>
-          <li>델타멤브레인</li>
-          <li>방수시트</li>
-          <li>THK11.1 OSB</li>
-          <li>2'x4' 통기층</li>
-          <li>투습방수지(지붕용)</li>
-          <li>2'x4' 각재 (THK38 글라스울 32K)</li>
-          <li>구조목 2'x12' (THK286 글라스울 40K)</li>
-          <li>가변형방습지(기밀층)</li>
-          <li>설비층</li>
-          <li>석고보드2겹/벽지</li>
+          <li>통기층(Air Gap) 및 델타멤브레인</li>
+          <li>방수시트 / 투습방수지</li>
+          <li>목재 지붕 구조체 + 주단열재</li>
+          <li>가변형 방습지 (실내측 기밀층)</li>
+          <li>천장 석고보드 및 실내 마감</li>
         </ol>
-        <div class="u-value">지붕 열관류율 <b>0.129</b> W/㎡·K</div>
+        <div class="u-value">실측 예시 열관류율 <b>0.129</b> W/㎡·K</div>
       </div>
-
       <div class="info-card">
-        <h3>벽체구성 (외벽)</h3>
-        <p style="font-size:12.5px;color:var(--text-sub);margin-bottom:8px;">바깥쪽 → 안쪽 순</p>
+        <h3>외벽 구성</h3>
         <ol class="layer-stack">
-          <li>메쉬미장/타일벽돌</li>
-          <li>T6시멘트보드</li>
-          <li>통기층</li>
-          <li>투습방수지</li>
-          <li>가로각재/THK38그라스울32K</li>
-          <li>세로각재/THK38그라스울32K</li>
-          <li>THK11.1 OSB</li>
-          <li>STUD/THK140 그라스울40K</li>
-          <li>가변형방습지</li>
-          <li>설비층</li>
-          <li>석고보드2겹/벽지</li>
+          <li>외장 마감재 (STC / 세라믹타일 / 벽돌 등)</li>
+          <li>투습방수지 (Breather Membrane)</li>
+          <li>고성능 외단열재</li>
+          <li>목재 구조체 + 중단열재</li>
+          <li>가변형 방습지 (실내측 기밀층)</li>
+          <li>설비층 (Service Cavity)</li>
+          <li>내장 석고보드 2겹 및 실내 마감</li>
         </ol>
-        <div class="u-value">외벽 열관류율 <b>0.196</b> W/㎡·K</div>
+        <div class="u-value">실측 예시 열관류율 <b>0.196</b> W/㎡·K</div>
       </div>
-
       <div class="info-card">
-        <h3>바닥구성</h3>
-        <p style="font-size:12.5px;color:var(--text-sub);margin-bottom:8px;">위(실내) → 아래 순</p>
+        <h3>바닥 구성</h3>
         <ol class="layer-stack">
-          <li>원목마루</li>
-          <li>THK40 시멘트몰탈(난방배관)</li>
-          <li>PE필름</li>
-          <li>THK50 비드법보온판 2종1호 '가'등급</li>
-          <li>콘크리트</li>
-          <li>PE 필름 2겹(분리층)</li>
-          <li>THK150 압출법보온판 특호</li>
-          <li>THK50~100 무근콘크리트</li>
-          <li>PE 필름 2겹(방습층)</li>
-          <li>THK200 잡석다짐</li>
+          <li>내장 바닥 마감재 (마루 / 타일)</li>
+          <li>방통 몰탈 + 난방 배관</li>
+          <li>바닥 단열재</li>
+          <li>기초 콘크리트 슬래브</li>
+          <li>방수 / 방습 레이어</li>
+          <li>기초 하부 단열재 (XPS)</li>
         </ol>
-        <div class="u-value">바닥 열관류율 <b>0.092</b> W/㎡·K</div>
+        <div class="u-value">실측 예시 열관류율 <b>0.092</b> W/㎡·K</div>
       </div>
+      <p class="info-note" style="padding:0 4px;">※ "실측 예시" 수치는 시공 사례 기준이며, 실제 설계에 따라 달라질 수 있습니다. 표준 성능 기준은 상단 표 참고.</p>
     </div>
 
-    <!-- 나머지 구조: 자료 준비중 -->
+    <!-- RC(철근콘크리트) -->
     <div id="spec-panel-rc" class="spec-panel">
-      <div class="coming-soon">
-        <div class="icon">📐</div>
-        <h3>RC(철근콘크리트) 제원 (준비중)</h3>
-        <p>지붕·벽체·바닥 구성 및 에너지 성능 자료를 주시면 채워 넣겠습니다.</p>
+      <div class="info-card">
+        <h3>지붕 구성</h3>
+        <ol class="layer-stack">
+          <li>지붕 마감재 (강판 / 기와 등)</li>
+          <li>통기층 및 방수 레이어</li>
+          <li>고성능 외단열재</li>
+          <li>RC 구조 슬래브</li>
+          <li>천장 마감 (실내측)</li>
+        </ol>
+      </div>
+      <div class="info-card">
+        <h3>외벽 구성</h3>
+        <ol class="layer-stack">
+          <li>외장 마감재 (STC / 세라믹타일 / 벽돌 등)</li>
+          <li>고성능 연속 외단열재</li>
+          <li>RC 구조 벽체 (구조 및 기밀층 역할)</li>
+          <li>실내 내장 마감 (석고보드 또는 미장)</li>
+        </ol>
+      </div>
+      <div class="info-card">
+        <h3>바닥 구성</h3>
+        <ol class="layer-stack">
+          <li>내장 바닥 마감재</li>
+          <li>방통 몰탈 + 난방 배관</li>
+          <li>바닥 단열재</li>
+          <li>RC 기초 구조체</li>
+          <li>기초 하부 단열재 (XPS) 및 방습층</li>
+        </ol>
       </div>
     </div>
+
     <div id="spec-panel-steel" class="spec-panel">
       <div class="coming-soon">
         <div class="icon">📐</div>
-        <h3>경량철골(스틸) 제원 (준비중)</h3>
-        <p>지붕·벽체·바닥 구성 및 에너지 성능 자료를 주시면 채워 넣겠습니다.</p>
+        <h3>경량철골(스틸) 성능 데이터 (준비중)</h3>
+        <p>지붕·벽체·바닥 구성 자료를 주시면 채워 넣겠습니다.</p>
       </div>
     </div>
     <div id="spec-panel-alc" class="spec-panel">
       <div class="coming-soon">
         <div class="icon">📐</div>
-        <h3>블록구조(ALC) 제원 (준비중)</h3>
-        <p>지붕·벽체·바닥 구성 및 에너지 성능 자료를 주시면 채워 넣겠습니다.</p>
+        <h3>블록구조(ALC) 성능 데이터 (준비중)</h3>
+        <p>지붕·벽체·바닥 구성 자료를 주시면 채워 넣겠습니다.</p>
       </div>
     </div>
     <div id="spec-panel-heavywood" class="spec-panel">
       <div class="coming-soon">
         <div class="icon">📐</div>
-        <h3>중목구조 제원 (준비중)</h3>
-        <p>지붕·벽체·바닥 구성 및 에너지 성능 자료를 주시면 채워 넣겠습니다.</p>
+        <h3>중목구조 성능 데이터 (준비중)</h3>
+        <p>지붕·벽체·바닥 구성 자료를 주시면 채워 넣겠습니다.</p>
       </div>
+    </div>
+
+    <!-- Zone 3: 설비 및 시스템 스펙 (공통, 구조 무관) -->
+    <div class="info-card">
+      <h3>설비 및 시스템 스펙 <span style="font-size:12px;color:var(--text-sub);font-weight:400;">모든 구조 공통</span></h3>
+      <p style="font-size:14px;color:var(--primary);font-weight:700;margin-bottom:4px;">"365일 깨끗한 공기와 최적의 온도를 유지하는 친환경 설비"</p>
+      <p style="font-size:13.5px;color:var(--text-sub);margin-bottom:18px;">버려지는 실내 온도는 최대 75% 이상 다시 회수하고, 초미세먼지와 이산화탄소는 밖으로 배출하여 창문을 열지 않고도 쾌적한 공기를 유지합니다.</p>
+      <table class="info-table">
+        <tr><th>구분</th><th>설비 항목</th><th>표준 적용 스펙</th><th>비고</th></tr>
+        <tr><td>환기</td><td class="left">열회수환기장치 (HRV/ERV)</td><td class="left">난방 유효현열 &gt; 75%<br>냉방 유효현열 &gt; 70%<br>유효잠열 &gt; 50%</td><td class="left">24시간 연속 환기 및 초미세먼지 필터링</td></tr>
+        <tr><td>냉난방</td><td class="left">고효율 냉난방 설비</td><td class="left">고효율 콘덴싱 가스보일러 / 히트펌프 + 인버터 에어컨</td><td class="left">적정 용량 최적설계 적용</td></tr>
+        <tr><td>기밀</td><td class="left">관통부 처리</td><td class="left">배관/전선 관통부 전용 기밀 부츠 및 기밀 패킹 필수 시공</td><td class="left">기밀성능 확보 (n50 ≤ 0.6)</td></tr>
+      </table>
     </div>
   </div>
 </div>
@@ -618,7 +654,7 @@
   <div class="local-tabs">
       <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
       <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
-      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
       <button class="local-tab active" onmousedown="goToTab('page-gallery', this)">갤러리</button>
@@ -649,7 +685,7 @@
   <div class="local-tabs">
       <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
       <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
-      <button class="local-tab" onmousedown="goToTab('page-specs', this)">제원</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab active" onmousedown="goToTab('page-price', this)">가격</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
