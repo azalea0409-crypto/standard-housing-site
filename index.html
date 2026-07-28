@@ -99,6 +99,29 @@
   }
   .u-value { margin-top:16px; padding:14px 18px; background:var(--bg); border-radius:12px; font-size:14px; color:var(--text); }
   .u-value b { color:var(--primary); font-size:20px; margin:0 4px; }
+
+  /* 매매(매물 리스팅) 페이지 전용 */
+  .listing-filters { display:flex; gap:8px; flex-wrap:wrap; }
+  .filter-chip {
+    padding:8px 16px; border-radius:999px; border:1px solid var(--border); background:#fff;
+    font-size:13px; font-weight:600; color:var(--text-sub); cursor:pointer; transition:all .15s;
+  }
+  .filter-chip:hover { border-color:var(--primary); }
+  .filter-chip.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+  .listing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:4px; }
+  @media(max-width:900px){ .listing-grid{ grid-template-columns:1fr; } }
+  .listing-card { background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.06); transition:transform .15s,box-shadow .15s; cursor:pointer; }
+  .listing-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,0.12); }
+  .listing-thumb { position:relative; width:100%; height:190px; overflow:hidden; background:#e8f0ea; }
+  .listing-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+  .listing-struct-badge { position:absolute; top:12px; left:12px; background:rgba(27,94,59,0.9); color:#fff; font-size:11.5px; font-weight:700; padding:5px 12px; border-radius:999px; }
+  .listing-body { padding:16px 18px 18px; }
+  .listing-price { font-size:19px; font-weight:800; color:var(--primary); margin-bottom:6px; }
+  .listing-addr { font-size:14px; font-weight:600; color:var(--text); margin-bottom:6px; }
+  .listing-meta { font-size:12.5px; color:var(--text-sub); display:flex; gap:8px; flex-wrap:wrap; }
+  .listing-meta span::after { content:'·'; margin-left:8px; color:var(--border); }
+  .listing-meta span:last-child::after { content:''; }
+  .listing-sample-note { background:#fff8e1; border:1px solid #f0d98c; color:#7a5c00; font-size:13px; padding:12px 16px; border-radius:12px; margin-bottom:20px; }
   .coming-soon { background:#fff; border-radius:20px; padding:60px 32px; text-align:center; box-shadow:0 2px 12px rgba(0,0,0,0.06); }
   .coming-soon .icon { font-size:40px; margin-bottom:16px; }
   .coming-soon h3 { font-size:20px; font-weight:700; margin-bottom:10px; }
@@ -260,6 +283,7 @@
       <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-listings', this)">매매</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
@@ -268,8 +292,8 @@
     </div>
   <div class="landing-hero">
     <div class="landing-badge">Passive House Institute Korea</div>
-    <h1 class="landing-title">검증된 표준주택,<br><span class="hl">직접 설계</span>하세요</h1>
-    <p class="landing-sub">한국패시브건축협회(PHIKO)가 인증한 표준주택 플랫폼.<br>구조·재질을 선택하고 3D로 확인한 뒤 바로 계약까지 완료하세요.</p>
+    <h1 class="landing-title">검증된 표준주택 위에,<br><span class="hl">편안한 일상</span>을 더합니다</h1>
+    <p class="landing-sub">(사)한국패시브건축협회가 인증한 표준주택을 합리적인 가격으로 제안합니다.<br>복잡한 설계와 성능 고민 없이, 안심하고 집짓기를 시작해 보세요.</p>
     <div class="hero-photo" style="background:none;padding:0;overflow:hidden;">
       <img src="hero_photo.png" alt="PHIKO 표준주택" style="width:100%;height:100%;object-fit:cover;display:block;">
     </div>
@@ -323,6 +347,7 @@
       <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-listings', this)">매매</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
@@ -345,6 +370,7 @@
       <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab active" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-listings', this)">매매</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
@@ -370,6 +396,7 @@
       <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-listings', this)">매매</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
@@ -487,6 +514,7 @@
       <button class="local-tab active" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-listings', this)">매매</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
@@ -657,6 +685,7 @@
       <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-listings', this)">매매</button>
       <button class="local-tab active" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
@@ -688,6 +717,7 @@
       <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
       <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
       <button class="local-tab active" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab" onmousedown="goToTab('page-listings', this)">매매</button>
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
@@ -726,19 +756,95 @@
       </table>
     </div>
 
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!--  PAGE: 매매 (매물 리스팅, 샘플 데이터)                        -->
+<!-- ============================================================ -->
+<div id="page-listings" class="page">
+  <nav class="top-nav">
+    <div class="nav-logo" onmousedown="goTo('page-landing')" style="cursor:pointer;">PHI<span>KO</span></div>
+    <div class="nav-btns">
+      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
+    </div>
+  </nav>
+  <div class="local-tabs">
+      <button class="local-tab" onmousedown="goToTab('page-landing', this)">홈</button>
+      <button class="local-tab" onmousedown="goToTab('page-features', this)">특징</button>
+      <button class="local-tab" onmousedown="goToTab('page-specs', this)">성능</button>
+      <button class="local-tab" onmousedown="goToTab('page-structure-guide', this)">모델비교</button>
+      <button class="local-tab" onmousedown="goToTab('page-price', this)">가격</button>
+      <button class="local-tab active" onmousedown="goToTab('page-listings', this)">매매</button>
+      <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
+      <div class="tab-cta-group">
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+      </div>
+    </div>
+  <div class="page-content">
+    <div class="listing-sample-note">⚠ 아래 매물 정보는 실제 데이터가 아닌 <b>화면 구성 예시(샘플)</b>입니다. 실제 매물 등록 시 사진·주소·가격을 교체해 주세요.</div>
+
     <div class="info-card">
-      <h3>구조별 부대비용 상세 (2026년, 예시: 경량목구조)</h3>
-      <p style="font-size:13.5px;color:var(--text-sub);margin-bottom:10px;">계약금액에 포함된 인증·인허가·라이센스·관리비 등의 세부 구성입니다.</p>
-      <table class="info-table">
-        <tr><th>타입</th><th>인증비</th><th>ZEB인증</th><th>인허가</th><th>도면라이센스비</th><th>구조도면</th><th>설비도면</th><th>관리비(1%)</th><th>예치금(하자대응 3%)</th><th>총계</th></tr>
-        <tr><td>38-S</td><td>5,000,000</td><td>1,500,000</td><td>8,800,000</td><td>1,100,000</td><td>1,100,000</td><td>1,100,000</td><td>3,570,000</td><td>11,810,000</td><td><b>33,980,000</b></td></tr>
-        <tr><td>38-W</td><td>5,000,000</td><td>1,500,000</td><td>8,800,000</td><td>1,100,000</td><td>1,100,000</td><td>1,100,000</td><td>4,130,000</td><td>13,640,000</td><td><b>36,370,000</b></td></tr>
-        <tr><td>50D-S</td><td>5,000,000</td><td>1,500,000</td><td>8,800,000</td><td>1,100,000</td><td>1,100,000</td><td>1,100,000</td><td>4,090,000</td><td>13,510,000</td><td><b>36,200,000</b></td></tr>
-        <tr><td>50D-W</td><td>5,000,000</td><td>1,500,000</td><td>8,800,000</td><td>1,100,000</td><td>1,100,000</td><td>1,100,000</td><td>4,470,000</td><td>14,770,000</td><td><b>37,840,000</b></td></tr>
-      </table>
-      <p class="info-note">단위: 원 · RC/스틸구조 부대비용은 관리비·예치금 비율이 다르게 적용됩니다 (전체 내역은 원본 엑셀 참고).</p>
+      <h3>표준주택 매매</h3>
+      <div class="listing-filters" id="listingFilters" style="margin-top:10px;">
+        <button class="filter-chip active" onmousedown="filterListings('all', this)">전체</button>
+        <button class="filter-chip" onmousedown="filterListings('lightwood', this)">경량목구조</button>
+        <button class="filter-chip" onmousedown="filterListings('rc', this)">RC(철근콘크리트)</button>
+        <button class="filter-chip" onmousedown="filterListings('steel', this)">경량철골(스틸)</button>
+      </div>
     </div>
 
+    <div class="listing-grid" id="listingGrid">
+      <div class="listing-card" data-struct="lightwood" onmousedown="alert('샘플 매물입니다. 실제 매물 상세페이지는 추후 연결됩니다.')">
+        <div class="listing-thumb"><span class="listing-struct-badge">경량목구조</span><img src="img_wood.jpg" alt=""></div>
+        <div class="listing-body">
+          <div class="listing-price">3억 9,970만원</div>
+          <div class="listing-addr">경기도 양평군 (예시 주소)</div>
+          <div class="listing-meta"><span>38평형(1층)</span><span>다락 없음(S)</span><span>준공 2026</span></div>
+        </div>
+      </div>
+      <div class="listing-card" data-struct="rc" onmousedown="alert('샘플 매물입니다. 실제 매물 상세페이지는 추후 연결됩니다.')">
+        <div class="listing-thumb"><span class="listing-struct-badge">RC(철근콘크리트)</span><img src="img_rc.jpg" alt=""></div>
+        <div class="listing-body">
+          <div class="listing-price">5억 6,331만원</div>
+          <div class="listing-addr">강원도 홍천군 (예시 주소)</div>
+          <div class="listing-meta"><span>50D평형(2층)</span><span>다락 있음(W)</span><span>준공 2025</span></div>
+        </div>
+      </div>
+      <div class="listing-card" data-struct="steel" onmousedown="alert('샘플 매물입니다. 실제 매물 상세페이지는 추후 연결됩니다.')">
+        <div class="listing-thumb"><span class="listing-struct-badge">경량철골(스틸)</span><img src="img_alc.jpg" alt=""></div>
+        <div class="listing-body">
+          <div class="listing-price">4억 9,907만원</div>
+          <div class="listing-addr">충청남도 예산군 (예시 주소)</div>
+          <div class="listing-meta"><span>38평형(1층)</span><span>다락 있음(W)</span><span>준공 2026</span></div>
+        </div>
+      </div>
+      <div class="listing-card" data-struct="lightwood" onmousedown="alert('샘플 매물입니다. 실제 매물 상세페이지는 추후 연결됩니다.')">
+        <div class="listing-thumb"><span class="listing-struct-badge">경량목구조</span><img src="hero_photo.png" alt=""></div>
+        <div class="listing-body">
+          <div class="listing-price">4억 9,850만원</div>
+          <div class="listing-addr">경기도 가평군 (예시 주소)</div>
+          <div class="listing-meta"><span>50D평형(2층)</span><span>다락 있음(W)</span><span>준공 2025</span></div>
+        </div>
+      </div>
+      <div class="listing-card" data-struct="rc" onmousedown="alert('샘플 매물입니다. 실제 매물 상세페이지는 추후 연결됩니다.')">
+        <div class="listing-thumb"><span class="listing-struct-badge">RC(철근콘크리트)</span><img src="img_rc.jpg" alt=""></div>
+        <div class="listing-body">
+          <div class="listing-price">4억 8,070만원</div>
+          <div class="listing-addr">전라남도 순천시 (예시 주소)</div>
+          <div class="listing-meta"><span>38평형(1층)</span><span>다락 없음(S)</span><span>준공 2026</span></div>
+        </div>
+      </div>
+      <div class="listing-card" data-struct="steel" onmousedown="alert('샘플 매물입니다. 실제 매물 상세페이지는 추후 연결됩니다.')">
+        <div class="listing-thumb"><span class="listing-struct-badge">경량철골(스틸)</span><img src="img_alc.jpg" alt=""></div>
+        <div class="listing-body">
+          <div class="listing-price">4억 7,927만원</div>
+          <div class="listing-addr">경상북도 영천시 (예시 주소)</div>
+          <div class="listing-meta"><span>50D평형(2층)</span><span>다락 없음(S)</span><span>준공 2025</span></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1212,6 +1318,15 @@ function switchSpecStruct(type, btnEl) {
   const target = document.getElementById('spec-panel-' + type);
   if(target) target.classList.add('active');
   document.querySelectorAll('#specStructTabs .tab-btn').forEach(b => b.classList.remove('active'));
+  if(btnEl) btnEl.classList.add('active');
+}
+
+// 매매 페이지: 구조 필터
+function filterListings(type, btnEl) {
+  document.querySelectorAll('#listingGrid .listing-card').forEach(card => {
+    card.style.display = (type === 'all' || card.dataset.struct === type) ? '' : 'none';
+  });
+  document.querySelectorAll('#listingFilters .filter-chip').forEach(b => b.classList.remove('active'));
   if(btnEl) btnEl.classList.add('active');
 }
 
