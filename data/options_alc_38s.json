@@ -1,0 +1,76 @@
+{
+  "structure": "ALC조",
+  "model": "38-S",
+  "model_file": "models/alc_38s.glb",
+  "unit": "만원",
+  "approx": true,
+  "notice": "옵션 증감은 기본 사양 대비 개략 금액이며 현장 여건에 따라 달라질 수 있음",
+  "updated": "2026-11-28",
+  "groups": [
+    {
+      "key": "window_vendor",
+      "label": "창호 업체",
+      "desc": "창호 프레임 제조사",
+      "choices": [
+        {
+          "key": "salamander",
+          "label": "살라만다",
+          "base": true,
+          "delta_manwon": 0
+        },
+        {
+          "key": "ensum",
+          "label": "엔썸",
+          "base": false,
+          "delta_manwon": 463
+        },
+        {
+          "key": "rehau",
+          "label": "레하우",
+          "base": false,
+          "delta_manwon": 670
+        }
+      ]
+    },
+    {
+      "key": "exterior_finish",
+      "label": "외장 마감",
+      "desc": "외벽 바깥 마감",
+      "choices": [
+        {
+          "key": "stucco",
+          "label": "외단열 미장",
+          "base": true,
+          "delta_manwon": 0,
+          "model_material": "Wall"
+        },
+        {
+          "key": "brick",
+          "label": "벽돌타일",
+          "base": false,
+          "delta_manwon": 1177,
+          "model_material": "Wall_brick"
+        }
+      ]
+    },
+    {
+      "key": "interior_wall_finish",
+      "label": "실내 벽 마감",
+      "desc": "거실·방 벽 마감 (욕실·다용도실 제외)",
+      "choices": [
+        {
+          "key": "paint",
+          "label": "도장",
+          "base": true,
+          "delta_manwon": 0
+        },
+        {
+          "key": "wallpaper",
+          "label": "벽지",
+          "base": false,
+          "delta_manwon": -501
+        }
+      ]
+    }
+  ]
+}

@@ -1147,7 +1147,10 @@
         </div>
       </div>
       <div class="custom-panel">
-        <div class="panel-title">외피 재질 선택</div>
+        <div class="panel-title" id="other-panel-title">외피 재질 선택</div>
+        <!-- BIM 옵션 (구조별 data/options_*.json 이 있으면 표시 : 현재 ALC조) -->
+        <div id="bim-options" style="display:none;"></div>
+        <div id="other-basic-opts">
         <div class="option-label">벽체 재료</div>
         <div class="option-chips" id="other-wall-chips">
           <!-- 동적 생성 -->
@@ -1160,6 +1163,7 @@
           <div class="swatch" style="background:#e5e7eb;" data-color="#e5e7eb" onclick="selectOtherColor(this,'#e5e7eb')"></div>
           <div class="swatch" style="background:#fee2e2;" data-color="#fee2e2" onclick="selectOtherColor(this,'#fee2e2')"></div>
           <div class="swatch" style="background:#374151;" data-color="#374151" onclick="selectOtherColor(this,'#374151')"></div>
+        </div>
         </div>
       </div>
     </div>
@@ -1257,6 +1261,8 @@
         <span class="contract-key">Care+ 플랜</span>
         <span class="contract-val" id="c-care">-</span>
       </div>
+      <!-- BIM 옵션 행 (커스텀 + 옵션 자료가 있는 구조일 때만) -->
+      <div id="c-opt-rows"></div>
       <div class="contract-row">
         <span class="contract-key">평형 · 타입</span>
         <span class="contract-val"><select id="c-size" onchange="state.size=this.value; buildContract();" style="padding:6px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:14px;">
@@ -1349,6 +1355,7 @@ function resetState() {
   state.wallMat  = '외단열미장';
   state.wallColor = '#f5f0eb'; // 외단열미장 기본색
   state.care     = '베이직';
+  bimOpt.sel     = {};
 }
 
 // ============================================================
@@ -1398,6 +1405,7 @@ function selectCustomStruct(structName) {
       chips.appendChild(d);
     });
     if(wallOptions[structName]) state.wallMat = wallOptions[structName][0];
+    setupBimOptions(structName);
     goTo('page-custom-other');
   }
 }
@@ -1578,6 +1586,26 @@ function buildContract() {
   const base = (PRICE26[state.struct] || {})[state.size];
   const careYear = state.care === '프리미엄' ? 59000 * 12 : state.care === '스탠다드' ? 29000 * 12 : 0;
   const won = n => n.toLocaleString() + '원';
+  // BIM 옵션 행 : 커스텀 + 옵션 자료가 있는 구조 (기본 금액이 '별도 협의'여도 증감만 표시)
+  const optBox = document.getElementById('c-opt-rows');
+  const od = state.type === '커스텀' ? bimOpt.data[state.struct] : null;
+  let optTotal = 0;
+  if (optBox) {
+    optBox.innerHTML = '';
+    if (od) {
+      let h = '';
+      od.groups.forEach(g => {
+        const c = bimChoice(od, g);
+        h += '<div class="contract-row"><span class="contract-key">' + g.label + '</span><span class="contract-val">' + c.label +
+             (c.delta_manwon ? ' (약 ' + manwon(c.delta_manwon) + ')' : ' (기본)') + '</span></div>';
+      });
+      optTotal = bimDeltaTotal(od);
+      h += '<div class="contract-row"><span class="contract-key">옵션 증감 합계 (기본 사양 대비, 개략)</span><span class="contract-val">' +
+           (optTotal ? '약 ' + manwon(optTotal) : '변동 없음') + '</span></div>';
+      h += '<div style="font-size:12px;color:var(--text-sub);padding:8px 0;">' + od.notice + '</div>';
+      optBox.innerHTML = h;
+    }
+  }
   if (!base) {
     document.getElementById('c-price').textContent = '별도 협의';
     document.getElementById('c-total').textContent = '별도 협의 (상담 후 결정)';
@@ -1590,7 +1618,9 @@ function buildContract() {
 // ============================================================
 // BIM 모델(GLB) 공용 로더 : 실제 축척(m) 유지, 재질 이름으로 지붕/외벽 구분
 // ============================================================
-const BIM_MODELS = { 'ALC조': 'alc_38s.glb' };
+// 구조를 늘릴 때는 여기 두 곳에 파일만 추가 : 모델(GLB, 노드 Wall·Roof, 재질 Wall_brick 등) + 옵션 자료(JSON)
+const BIM_MODELS  = { 'ALC조': 'models/alc_38s.glb' };
+const BIM_OPTIONS = { 'ALC조': 'data/options_alc_38s.json' };
 function loadBimModel(url, scene, camera, controls, opt) {
   const roofList = [], wallList = [];
   new THREE.GLTFLoader().load(url, function(gltf) {
@@ -1600,8 +1630,14 @@ function loadBimModel(url, scene, camera, controls, opt) {
       const n = (child.name || '') + ' ' + ((child.material && child.material.name) || '');
       child.material = child.material.clone();
       if (/roof|Roof/.test(n)) { roofList.push(child); if (opt.roofColor) child.material.color.set(opt.roofColor); }
-      else if (/ext_finish|Wall/.test(n)) { wallList.push(child); if (opt.wallColor) child.material.color.set(opt.wallColor); }
+      else if (/ext_finish|Wall/.test(n)) { child.userData.baseMaterial = child.material; wallList.push(child); if (opt.wallColor) child.material.color.set(opt.wallColor); }
     });
+    // GLB 안의 재질 전체 (메시에 안 쓰인 옵션 재질 Wall_brick 등 포함)
+    const mats = {};
+    const matsReady = gltf.parser.getDependencies('material').then(function(list) {
+      list.forEach(function(m) { if (m && m.name) mats[m.name] = m; });
+      return mats;
+    }).catch(function() { return mats; });
     const box = new THREE.Box3().setFromObject(model);
     const c = box.getCenter(new THREE.Vector3());
     model.position.set(-c.x, -box.min.y, -c.z);
@@ -1610,10 +1646,98 @@ function loadBimModel(url, scene, camera, controls, opt) {
     camera.position.set(d * 0.75, d * 0.55, d * 0.95);
     controls.target.set(0, (box.max.y - box.min.y) * 0.35, 0);
     controls.update();
-    if (opt.onLoad) opt.onLoad(roofList, wallList);
+    if (opt.onLoad) matsReady.then(function(m) { opt.onLoad(roofList, wallList, m); });
   }, undefined, function(err) {
     console.warn(url + ' 로드 실패, 절차적 모델 사용', err);
     if (opt.onFail) opt.onFail();
+  });
+}
+
+// ============================================================
+// BIM 옵션 (커스텀) : data/options_*.json → 선택지·기본 사양 대비 증감 (만원, 개략)
+// ============================================================
+const bimOpt = { data: {}, sel: {} };          // data[구조] = 옵션 자료, sel[그룹키] = 선택 키
+const bimModel = { walls: [], mats: {} };      // 커스텀 뷰어의 외벽 메시·GLB 재질
+const manwon = n => (n > 0 ? '+' : n < 0 ? '-' : '') + Math.abs(n).toLocaleString() + '만원';
+
+function loadBimOptions(struct) {
+  const url = BIM_OPTIONS[struct];
+  if (!url) return Promise.resolve(null);
+  if (bimOpt.data[struct]) return Promise.resolve(bimOpt.data[struct]);
+  return fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(d => { bimOpt.data[struct] = d; return d; })
+    .catch(err => { console.warn(url + ' 읽기 실패', err); return null; });
+}
+
+function bimChoice(d, g) {
+  return g.choices.find(c => c.key === bimOpt.sel[g.key]) || g.choices.find(c => c.base) || g.choices[0];
+}
+
+function bimDeltaTotal(d) {
+  return d ? d.groups.reduce((a, g) => a + bimChoice(d, g).delta_manwon, 0) : 0;
+}
+
+function setupBimOptions(struct) {
+  const box = document.getElementById('bim-options');
+  const basic = document.getElementById('other-basic-opts');
+  const title = document.getElementById('other-panel-title');
+  box.style.display = 'none'; basic.style.display = ''; title.textContent = '외피 재질 선택';
+  if (!BIM_OPTIONS[struct]) return;
+  loadBimOptions(struct).then(d => {
+    if (!d || state.struct !== struct) return;
+    d.groups.forEach(g => { if (!bimOpt.sel[g.key]) bimOpt.sel[g.key] = (g.choices.find(c => c.base) || g.choices[0]).key; });
+    basic.style.display = 'none'; box.style.display = ''; title.textContent = '사양 선택';
+    renderBimOptions(d);
+  });
+}
+
+function renderBimOptions(d) {
+  const box = document.getElementById('bim-options');
+  let html = '';
+  d.groups.forEach(g => {
+    html += '<div class="option-label">' + g.label + ' <span style="font-size:11px;color:#888;text-transform:none;letter-spacing:0;">' + g.desc + '</span></div>';
+    html += '<div class="option-chips">';
+    g.choices.forEach(c => {
+      const on = bimOpt.sel[g.key] === c.key;
+      const tail = c.base ? ' (기본)' : ' · 약 ' + manwon(c.delta_manwon);
+      html += '<div class="chip' + (on ? ' selected' : '') + '" data-group="' + g.key + '" data-key="' + c.key + '">' + c.label + tail + '</div>';
+    });
+    html += '</div>';
+  });
+  const total = bimDeltaTotal(d);
+  html += '<div style="background:#f0fdf4;border-radius:10px;padding:12px 16px;font-size:13px;color:#166534;">';
+  html += '<div style="font-weight:700;margin-bottom:6px;">기본 사양 대비 증감</div>';
+  d.groups.forEach(g => {
+    const c = bimChoice(d, g);
+    html += '<div style="display:flex;justify-content:space-between;gap:8px;"><span>' + g.label + ' : ' + c.label + '</span><span>' +
+            (c.delta_manwon ? '약 ' + manwon(c.delta_manwon) : '-') + '</span></div>';
+  });
+  html += '<div style="display:flex;justify-content:space-between;gap:8px;border-top:1px dashed #bbf7d0;margin-top:6px;padding-top:6px;font-weight:700;"><span>합계</span><span>' +
+          (total ? '약 ' + manwon(total) : '변동 없음') + '</span></div>';
+  html += '</div>';
+  html += '<div class="info-note" style="margin-top:10px;">' + d.notice + '</div>';
+  box.innerHTML = html;
+  box.querySelectorAll('.chip').forEach(el => {
+    el.onclick = function() {
+      bimOpt.sel[this.dataset.group] = this.dataset.key;
+      renderBimOptions(d);
+      applyBimMaterials();
+    };
+  });
+  // 계약서 '벽체 재질' 칸 : 외장 마감 선택값
+  const ext = d.groups.find(g => g.choices.some(c => c.model_material));
+  if (ext) { state.wallMat = bimChoice(d, ext).label; state.wallColor = '-'; }
+}
+
+// 외장 선택에 따라 외벽 재질 교체 (Wall ↔ Wall_brick)
+function applyBimMaterials() {
+  const d = bimOpt.data[state.struct];
+  if (!d || !bimModel.walls.length) return;
+  const ext = d.groups.find(g => g.choices.some(c => c.model_material));
+  if (!ext) return;
+  const name = bimChoice(d, ext).model_material;
+  bimModel.walls.forEach(m => {
+    m.material = (name && name !== 'Wall' && bimModel.mats[name]) ? bimModel.mats[name] : (m.userData.baseMaterial || m.material);
   });
 }
 
@@ -1781,6 +1905,7 @@ function initOtherViewer() {
   const canvas = document.getElementById('other-canvas');
   if(otherRenderer) { otherRenderer.dispose(); cancelAnimationFrame(otherAnimId); }
   otherMeshes = [];
+  bimModel.walls = []; bimModel.mats = {};
 
   otherScene = new THREE.Scene();
   otherScene.background = new THREE.Color('#e8f5ee');
@@ -1799,9 +1924,10 @@ function initOtherViewer() {
   const colorMap = {'경량목구조':'#d4b896','스틸조':'#e5e7eb','ALC조':'#c8e6d4'};
   const c = colorMap[state.struct] || '#f1f5f9';
   if (BIM_MODELS[state.struct]) {
+    const useOpts = !!BIM_OPTIONS[state.struct];
     loadBimModel(BIM_MODELS[state.struct], otherScene, otherCamera, otherControls, {
-      wallColor: state.wallColor && state.wallColor !== '-' ? state.wallColor : null,
-      onLoad: (roofs, walls) => { otherMeshes = walls; },
+      wallColor: !useOpts && state.wallColor && state.wallColor !== '-' ? state.wallColor : null,
+      onLoad: (roofs, walls, mats) => { otherMeshes = walls; bimModel.walls = walls; bimModel.mats = mats || {}; applyBimMaterials(); },
       onFail: () => { buildProceduralHouse(otherScene, c, '#6b7280'); otherScene.traverse(ch=>{ if(ch.isMesh) otherMeshes.push(ch); }); }
     });
   } else {
