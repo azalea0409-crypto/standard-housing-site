@@ -293,7 +293,8 @@
               ],
               "thumb": "linear-gradient(135deg,#3f4448 0 18%,#bcd8e6 18% 82%,#3f4448 82%)"
             }
-          ]
+          ],
+          "basis": "경량목 창호 단가 환산, 임시값"
         },
         {
           "key": "interior",
@@ -302,32 +303,32 @@
           "desc": "거실·방 벽 마감 (욕실·다용도실 타일 제외)",
           "choices": [
             {
-              "key": "paint",
-              "label": "도장",
+              "key": "paper",
+              "label": "벽지",
               "base": true,
               "delta_manwon": 0,
-              "desc": "친환경 수성페인트",
+              "desc": "합지 벽지",
               "delta_by_size": {
                 "38-S": 0,
                 "38-W": 0,
                 "50D-S": 0,
                 "50D-W": 0
               },
-              "thumb": "linear-gradient(135deg,#ffffff,#f1f5f9)"
+              "thumb": "repeating-linear-gradient(45deg,#f8fafc 0px,#f8fafc 6px,#eef2f7 6px,#eef2f7 12px)"
             },
             {
-              "key": "paper",
-              "label": "벽지",
+              "key": "paint",
+              "label": "도장",
               "base": false,
-              "delta_manwon": -460,
-              "desc": "합지 벽지",
+              "delta_manwon": 460,
+              "desc": "친환경 수성페인트",
               "delta_by_size": {
-                "38-S": -460,
-                "38-W": -460,
-                "50D-S": -650,
-                "50D-W": -650
+                "38-S": 460,
+                "38-W": 460,
+                "50D-S": 650,
+                "50D-W": 650
               },
-              "thumb": "repeating-linear-gradient(45deg,#f8fafc 0px,#f8fafc 6px,#eef2f7 6px,#eef2f7 12px)"
+              "thumb": "linear-gradient(135deg,#ffffff,#f1f5f9)"
             }
           ]
         },

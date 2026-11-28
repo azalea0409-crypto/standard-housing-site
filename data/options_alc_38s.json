@@ -294,7 +294,8 @@
               ],
               "thumb": "linear-gradient(135deg,#3f4448 0 18%,#bcd8e6 18% 82%,#3f4448 82%)"
             }
-          ]
+          ],
+          "basis": "경량목 창호 단가 환산, 임시값"
         },
         {
           "key": "interior",

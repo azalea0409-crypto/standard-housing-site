@@ -157,11 +157,38 @@
           "color_target": "Roof",
           "choices": [
             {
-              "key": "metal",
-              "label": "금속 강판",
+              "key": "gravel",
+              "label": "역전지붕 + 쇄석",
               "base": true,
               "delta_manwon": 0,
-              "desc": "0.5mm 고내식 고내후성 강판 거멀접기. 색상 변경은 증감 없음",
+              "desc": "평지붕 역전지붕, 쇄석 50mm 마감",
+              "color_hex": "#9ca3af",
+              "thumb": "linear-gradient(135deg,#9ca3af,#d1d5db,#9ca3af)"
+            },
+            {
+              "key": "stone",
+              "label": "역전지붕 + 석재 타일",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "마감재 추가",
+              "color_hex": "#78716c",
+              "thumb": "linear-gradient(135deg,#a8a29e,#78716c,#a8a29e)"
+            },
+            {
+              "key": "deck",
+              "label": "역전지붕 + 데크",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "마감재 추가",
+              "color_hex": "#92400e",
+              "thumb": "repeating-linear-gradient(90deg,#92400e 0px,#92400e 18px,#78350f 18px,#78350f 20px)"
+            },
+            {
+              "key": "hybrid",
+              "label": "경사지붕 (목구조 지붕 하이브리드)",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "RC 벽체 위 목구조 지붕 + 금속 강판 마감. 금액은 상담 후 결정",
               "colors": [
                 {
                   "hex": "#3a3e42",
@@ -189,16 +216,8 @@
                   "base": false
                 }
               ],
-              "thumb": "repeating-linear-gradient(90deg,#3a3e42 0px,#3a3e42 10px,#4b5055 10px,#4b5055 12px)"
-            },
-            {
-              "key": "flat",
-              "label": "평지붕 (역전지붕 + 쇄석)",
-              "base": false,
-              "delta_manwon": null,
-              "desc": "평지붕 대안. 3D 는 박공 모델로 표시, 금액은 상담 후 결정",
-              "color_hex": "#9ca3af",
-              "thumb": "linear-gradient(135deg,#9ca3af,#d1d5db,#9ca3af)"
+              "thumb": "repeating-linear-gradient(90deg,#3a3e42 0px,#3a3e42 10px,#4b5055 10px,#4b5055 12px)",
+              "model_suffix": "_gable"
             }
           ]
         },
@@ -302,7 +321,8 @@
               ],
               "thumb": "linear-gradient(135deg,#3f4448 0 18%,#bcd8e6 18% 82%,#3f4448 82%)"
             }
-          ]
+          ],
+          "basis": "경량목 창호 단가 환산, 임시값"
         },
         {
           "key": "interior",
@@ -311,32 +331,32 @@
           "desc": "거실·방 벽 마감 (욕실·다용도실 타일 제외)",
           "choices": [
             {
-              "key": "paint",
-              "label": "도장",
+              "key": "paper",
+              "label": "벽지",
               "base": true,
               "delta_manwon": 0,
-              "desc": "친환경 수성페인트",
+              "desc": "합지 벽지",
               "delta_by_size": {
                 "38-S": 0,
                 "38-W": 0,
                 "50D-S": 0,
                 "50D-W": 0
               },
-              "thumb": "linear-gradient(135deg,#ffffff,#f1f5f9)"
+              "thumb": "repeating-linear-gradient(45deg,#f8fafc 0px,#f8fafc 6px,#eef2f7 6px,#eef2f7 12px)"
             },
             {
-              "key": "paper",
-              "label": "벽지",
+              "key": "paint",
+              "label": "도장",
               "base": false,
-              "delta_manwon": -361,
-              "desc": "합지 벽지",
+              "delta_manwon": 361,
+              "desc": "친환경 수성페인트",
               "delta_by_size": {
-                "38-S": -361,
-                "38-W": -361,
-                "50D-S": -577,
-                "50D-W": -578
+                "38-S": 361,
+                "38-W": 361,
+                "50D-S": 578,
+                "50D-W": 577
               },
-              "thumb": "repeating-linear-gradient(45deg,#f8fafc 0px,#f8fafc 6px,#eef2f7 6px,#eef2f7 12px)"
+              "thumb": "linear-gradient(135deg,#ffffff,#f1f5f9)"
             }
           ]
         },

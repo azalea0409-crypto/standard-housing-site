@@ -1315,13 +1315,22 @@ BIM_MODELS['경골목구조'] = BIM_MODELS['경량목구조'];
 const BIM_OPTIONS = { 'ALC조': 'data/options_alc_38s.json', 'RC조': 'data/options_rc.json', '중목구조': 'data/options_jung.json',
                       '경량목구조': 'data/options_wood.json', '경골목구조': 'data/options_wood.json', '스틸조': 'data/options_steel.json' };
 // 고른 타입의 모델이 없으면 가까운 타입 (38-W → 38-S, 50D-W → 50D-S, 그래도 없으면 38-S)
+// 사양 선택에 따라 다른 모델을 쓰는 경우 (선택지 model_suffix, 예 : RC 경사지붕 → rc_38s_gable.glb)
+function modelSuffix(struct) {
+  const d = specData[struct];
+  if (!d) return '';
+  for (const it of specItems(d)) { const c = specSel(it).choice; if (c.model_suffix) return c.model_suffix; }
+  return '';
+}
 function bimModelFor(struct, size) {
   const m = BIM_MODELS[struct];
   if (!m) return null;
-  if (m[size]) return { url: m[size], shown: size };
+  const sfx = modelSuffix(struct);
+  const withSfx = u => sfx ? u.replace(/\.glb$/, sfx + '.glb') : u;
+  if (m[size]) return { url: withSfx(m[size]), shown: size };
   const near = size.startsWith('50D') ? '50D-S' : '38-S';
   const shown = m[near] ? near : '38-S';
-  return m[shown] ? { url: m[shown], shown } : null;
+  return m[shown] ? { url: withSfx(m[shown]), shown } : null;
 }
 function selectSize(size) {
   state.size = size;
@@ -1561,7 +1570,10 @@ function renderSpec(d) {
   panel.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { specUi.cat = b.dataset.cat; specUi.item = null; renderSpec(d); });
   panel.querySelectorAll('[data-item]').forEach(b => b.onclick = () => { specUi.item = b.dataset.item; renderSpec(d); });
   panel.querySelectorAll('[data-choice]').forEach(b => b.onclick = () => {
-    state.spec[item.key] = { choice: b.dataset.choice }; renderSpec(d); applySpec3D();
+    const before = modelSuffix(state.struct);
+    state.spec[item.key] = { choice: b.dataset.choice }; renderSpec(d);
+    if (modelSuffix(state.struct) !== before) initOtherViewer();   // 예 : RC 경사지붕 하이브리드 → 박공 모델로 바꿔 보여줌
+    else applySpec3D();
   });
   panel.querySelectorAll('[data-color]').forEach(b => b.onclick = () => {
     state.spec[item.key] = { choice: sel.choice.key, color: b.dataset.color }; renderSpec(d); applySpec3D();
