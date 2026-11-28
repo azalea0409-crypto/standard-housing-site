@@ -48,8 +48,9 @@
           "key": "brick",
           "label": "벽돌타일",
           "base": false,
-          "delta_manwon": 1177,
-          "model_material": "Wall_brick"
+          "delta_manwon": null,
+          "model_material": "Wall_brick",
+          "note": "외단열·마감 분리 단가 확정 전"
         }
       ]
     },

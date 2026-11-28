@@ -1597,11 +1597,11 @@ function buildContract() {
       od.groups.forEach(g => {
         const c = bimChoice(od, g);
         h += '<div class="contract-row"><span class="contract-key">' + g.label + '</span><span class="contract-val">' + c.label +
-             (c.delta_manwon ? ' (약 ' + manwon(c.delta_manwon) + ')' : ' (기본)') + '</span></div>';
+             ' (' + deltaTxt(c) + ')' + '</span></div>';
       });
       optTotal = bimDeltaTotal(od);
       h += '<div class="contract-row"><span class="contract-key">옵션 증감 합계 (기본 사양 대비, 개략)</span><span class="contract-val">' +
-           (optTotal ? '약 ' + manwon(optTotal) : '변동 없음') + '</span></div>';
+           totalTxt(od, optTotal) + '</span></div>';
       h += '<div style="font-size:12px;color:var(--text-sub);padding:8px 0;">' + od.notice + '</div>';
       optBox.innerHTML = h;
     }
@@ -1614,6 +1614,23 @@ function buildContract() {
     document.getElementById('c-total').textContent = won(base + careYear) + (careYear ? ' (Care+ 1년 포함)' : '');
   }
 }
+
+// ============================================================
+// 3D 캔버스 크기 맞춤 : 처음 열 때 폭이 0이어도 다음에 바로잡히도록 부모 폭 기준, style 고정 안 함
+// ============================================================
+function fitRenderer(renderer, camera, canvas) {
+  if (!renderer || !camera || !canvas) return;
+  canvas.style.width = '100%';
+  const w = canvas.parentElement.clientWidth || canvas.clientWidth || 800;
+  const h = canvas.clientHeight || 520;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', () => {
+  if (typeof stdRenderer !== 'undefined') fitRenderer(stdRenderer, stdCamera, document.getElementById('standard-canvas'));
+  if (typeof rcRenderer !== 'undefined') fitRenderer(rcRenderer, rcCamera, document.getElementById('custom-canvas'));
+  if (typeof otherRenderer !== 'undefined') fitRenderer(otherRenderer, otherCamera, document.getElementById('other-canvas'));
+});
 
 // ============================================================
 // BIM 모델(GLB) 공용 로더 : 실제 축척(m) 유지, 재질 이름으로 지붕/외벽 구분
@@ -1659,6 +1676,10 @@ function loadBimModel(url, scene, camera, controls, opt) {
 const bimOpt = { data: {}, sel: {} };          // data[구조] = 옵션 자료, sel[그룹키] = 선택 키
 const bimModel = { walls: [], mats: {} };      // 커스텀 뷰어의 외벽 메시·GLB 재질
 const manwon = n => (n > 0 ? '+' : n < 0 ? '-' : '') + Math.abs(n).toLocaleString() + '만원';
+// 증감 표기 : 기본 / 별도 협의(금액 미확정, delta_manwon = null) / 약 ±N만원
+const deltaTxt = c => c.base ? '기본' : (c.delta_manwon === null || c.delta_manwon === undefined) ? '별도 협의' : '약 ' + manwon(c.delta_manwon);
+const bimHasPending = d => !!d && d.groups.some(g => { const c = bimChoice(d, g); return !c.base && (c.delta_manwon === null || c.delta_manwon === undefined); });
+const totalTxt = (d, total) => (total ? '약 ' + manwon(total) : (bimHasPending(d) ? '' : '변동 없음')) + (bimHasPending(d) ? (total ? ' + ' : '') + '별도 협의 항목' : '');
 
 function loadBimOptions(struct) {
   const url = BIM_OPTIONS[struct];
@@ -1674,7 +1695,7 @@ function bimChoice(d, g) {
 }
 
 function bimDeltaTotal(d) {
-  return d ? d.groups.reduce((a, g) => a + bimChoice(d, g).delta_manwon, 0) : 0;
+  return d ? d.groups.reduce((a, g) => a + (bimChoice(d, g).delta_manwon || 0), 0) : 0;
 }
 
 function setupBimOptions(struct) {
@@ -1699,7 +1720,7 @@ function renderBimOptions(d) {
     html += '<div class="option-chips">';
     g.choices.forEach(c => {
       const on = bimOpt.sel[g.key] === c.key;
-      const tail = c.base ? ' (기본)' : ' · 약 ' + manwon(c.delta_manwon);
+      const tail = c.base ? ' (기본)' : ' · ' + deltaTxt(c);
       html += '<div class="chip' + (on ? ' selected' : '') + '" data-group="' + g.key + '" data-key="' + c.key + '">' + c.label + tail + '</div>';
     });
     html += '</div>';
@@ -1710,10 +1731,10 @@ function renderBimOptions(d) {
   d.groups.forEach(g => {
     const c = bimChoice(d, g);
     html += '<div style="display:flex;justify-content:space-between;gap:8px;"><span>' + g.label + ' : ' + c.label + '</span><span>' +
-            (c.delta_manwon ? '약 ' + manwon(c.delta_manwon) : '-') + '</span></div>';
+            (c.base ? '-' : deltaTxt(c)) + '</span></div>';
   });
   html += '<div style="display:flex;justify-content:space-between;gap:8px;border-top:1px dashed #bbf7d0;margin-top:6px;padding-top:6px;font-weight:700;"><span>합계</span><span>' +
-          (total ? '약 ' + manwon(total) : '변동 없음') + '</span></div>';
+          totalTxt(d, total) + '</span></div>';
   html += '</div>';
   html += '<div class="info-note" style="margin-top:10px;">' + d.notice + '</div>';
   box.innerHTML = html;
@@ -1757,7 +1778,7 @@ function initStandardViewer() {
   stdCamera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 0.1, 1000);
   stdCamera.position.set(6,5,10);
   stdRenderer = new THREE.WebGLRenderer({canvas, antialias:true});
-  stdRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  fitRenderer(stdRenderer, stdCamera, canvas);
   stdRenderer.setPixelRatio(window.devicePixelRatio);
   stdControls = new THREE.OrbitControls(stdCamera, stdRenderer.domElement);
   stdControls.enableDamping = true;
@@ -1798,7 +1819,7 @@ function initCustomRcViewer() {
   rcCamera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 0.1, 1000);
   rcCamera.position.set(8,6,12);
   rcRenderer = new THREE.WebGLRenderer({canvas, antialias:true});
-  rcRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  fitRenderer(rcRenderer, rcCamera, canvas);
   rcRenderer.setPixelRatio(window.devicePixelRatio);
   rcControls = new THREE.OrbitControls(rcCamera, rcRenderer.domElement);
   rcControls.enableDamping = true;
@@ -1916,7 +1937,7 @@ function initOtherViewer() {
   otherCamera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 0.1, 1000);
   otherCamera.position.set(7,5,11);
   otherRenderer = new THREE.WebGLRenderer({canvas, antialias:true});
-  otherRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  fitRenderer(otherRenderer, otherCamera, canvas);
   otherRenderer.setPixelRatio(window.devicePixelRatio);
   otherControls = new THREE.OrbitControls(otherCamera, otherRenderer.domElement);
   otherControls.enableDamping = true;
