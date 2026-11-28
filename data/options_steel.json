@@ -1,0 +1,446 @@
+{
+  "structure": "스틸조",
+  "model": "38-S",
+  "model_file": "models/steel_38s.glb",
+  "models": {
+    "38-S": "models/steel_38s.glb",
+    "50D-S": "models/steel_50ds.glb"
+  },
+  "size_label": "38-S (3D 모델 기준)",
+  "categories": [
+    {
+      "key": "finish",
+      "label": "마감재료",
+      "items": [
+        {
+          "key": "exterior",
+          "label": "외벽",
+          "contract": true,
+          "color_target": "Wall",
+          "choices": [
+            {
+              "key": "siding",
+              "label": "사이딩",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "사이딩 마감 (3D 는 색만 표시)",
+              "model_material": "Wall",
+              "colors": [
+                {
+                  "hex": "#1f2937",
+                  "label": "차콜",
+                  "base": true
+                },
+                {
+                  "hex": "#374151",
+                  "label": "다크그레이",
+                  "base": false
+                },
+                {
+                  "hex": "#6b7280",
+                  "label": "그레이",
+                  "base": false
+                },
+                {
+                  "hex": "#e5e7eb",
+                  "label": "라이트그레이",
+                  "base": false
+                },
+                {
+                  "hex": "#92400e",
+                  "label": "우드브라운",
+                  "base": false
+                },
+                {
+                  "hex": "#1e3a5f",
+                  "label": "네이비",
+                  "base": false
+                }
+              ],
+              "thumb": "repeating-linear-gradient(180deg,#374151 0px,#374151 14px,#1f2937 14px,#1f2937 16px)"
+            },
+            {
+              "key": "brick",
+              "label": "벽돌타일",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "벽돌타일 마감",
+              "model_material": "Wall_brick",
+              "colors": [
+                {
+                  "hex": "#a4553a",
+                  "label": "레드브릭",
+                  "base": true
+                },
+                {
+                  "hex": "#92400e",
+                  "label": "브라운브릭",
+                  "base": false
+                },
+                {
+                  "hex": "#d97706",
+                  "label": "옐로우브릭",
+                  "base": false
+                }
+              ],
+              "thumb": "url('Category/wall/bricks tile.PNG') center/cover, #a4553a"
+            },
+            {
+              "key": "stucco",
+              "label": "외단열 미장",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "외단열 + 미장 마감, 색상 선택",
+              "model_material": "Wall",
+              "colors": [
+                {
+                  "hex": "#f5f0eb",
+                  "label": "아이보리",
+                  "base": true
+                },
+                {
+                  "hex": "#e5e7eb",
+                  "label": "라이트그레이",
+                  "base": false
+                },
+                {
+                  "hex": "#d1d5db",
+                  "label": "미디엄그레이",
+                  "base": false
+                },
+                {
+                  "hex": "#fef3c7",
+                  "label": "크림",
+                  "base": false
+                },
+                {
+                  "hex": "#fde68a",
+                  "label": "샌드",
+                  "base": false
+                },
+                {
+                  "hex": "#dbeafe",
+                  "label": "라이트블루",
+                  "base": false
+                },
+                {
+                  "hex": "#bbf7d0",
+                  "label": "민트",
+                  "base": false
+                },
+                {
+                  "hex": "#374151",
+                  "label": "다크그레이",
+                  "base": false
+                }
+              ],
+              "thumb": "url('Category/wall/eifs.PNG') center/cover, #f5f0eb"
+            }
+          ]
+        },
+        {
+          "key": "roof",
+          "label": "지붕",
+          "contract": true,
+          "color_target": "Roof",
+          "choices": [
+            {
+              "key": "metal",
+              "label": "금속 강판",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "0.5mm 고내식 고내후성 강판 거멀접기. 색상 변경은 증감 없음",
+              "colors": [
+                {
+                  "hex": "#3a3e42",
+                  "label": "짙은 회색",
+                  "base": true
+                },
+                {
+                  "hex": "#1f2937",
+                  "label": "차콜",
+                  "base": false
+                },
+                {
+                  "hex": "#111827",
+                  "label": "블랙",
+                  "base": false
+                },
+                {
+                  "hex": "#6b7280",
+                  "label": "그레이",
+                  "base": false
+                },
+                {
+                  "hex": "#5b3a29",
+                  "label": "브라운",
+                  "base": false
+                }
+              ],
+              "thumb": "repeating-linear-gradient(90deg,#3a3e42 0px,#3a3e42 10px,#4b5055 10px,#4b5055 12px)"
+            }
+          ]
+        },
+        {
+          "key": "window",
+          "label": "창호",
+          "contract": true,
+          "color_target": "Window_frame",
+          "desc": "PVC 시스템창호 + 로이 3중유리. 창틀 외부 색 기본 짙은 회색 (다른 색은 별도 협의)",
+          "choices": [
+            {
+              "key": "std",
+              "label": "기본 시스템창호",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "기본 사양",
+              "colors": [
+                {
+                  "hex": "#3f4448",
+                  "label": "짙은 회색",
+                  "base": true
+                },
+                {
+                  "hex": "#1a1a1a",
+                  "label": "블랙",
+                  "base": false
+                },
+                {
+                  "hex": "#f5f5f5",
+                  "label": "화이트",
+                  "base": false
+                }
+              ],
+              "thumb": "linear-gradient(135deg,#3f4448 0 18%,#bcd8e6 18% 82%,#3f4448 82%)"
+            },
+            {
+              "key": "other",
+              "label": "다른 제품",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "제품 변경은 상담 후 결정",
+              "colors": [
+                {
+                  "hex": "#3f4448",
+                  "label": "짙은 회색",
+                  "base": true
+                },
+                {
+                  "hex": "#1a1a1a",
+                  "label": "블랙",
+                  "base": false
+                },
+                {
+                  "hex": "#f5f5f5",
+                  "label": "화이트",
+                  "base": false
+                }
+              ],
+              "thumb": "linear-gradient(135deg,#3f4448 0 18%,#bcd8e6 18% 82%,#3f4448 82%)"
+            }
+          ]
+        },
+        {
+          "key": "interior",
+          "label": "실내벽",
+          "contract": true,
+          "desc": "거실·방 벽 마감 (욕실·다용도실 타일 제외)",
+          "choices": [
+            {
+              "key": "paint",
+              "label": "도장",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "친환경 수성페인트",
+              "thumb": "linear-gradient(135deg,#ffffff,#f1f5f9)"
+            },
+            {
+              "key": "paper",
+              "label": "벽지",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "합지 벽지",
+              "thumb": "repeating-linear-gradient(45deg,#f8fafc 0px,#f8fafc 6px,#eef2f7 6px,#eef2f7 12px)"
+            }
+          ]
+        },
+        {
+          "key": "floor",
+          "label": "바닥재",
+          "contract": true,
+          "choices": [
+            {
+              "key": "std",
+              "label": "강마루 + 타일",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "강마루 (거실·방), 논슬립 타일 (욕실·다용도실·현관)",
+              "thumb": "repeating-linear-gradient(90deg,#c4a076 0px,#c4a076 22px,#b08a60 22px,#b08a60 24px)"
+            },
+            {
+              "key": "color",
+              "label": "색상 변경",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "강마루·타일 마감 색상 선택",
+              "thumb": "repeating-linear-gradient(90deg,#c4a076 0px,#c4a076 22px,#b08a60 22px,#b08a60 24px)"
+            }
+          ]
+        },
+        {
+          "key": "door",
+          "label": "현관문",
+          "contract": true,
+          "choices": [
+            {
+              "key": "std",
+              "label": "패시브 현관문",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "고단열 고기밀 현관문",
+              "thumb": "linear-gradient(135deg,#33373b,#4b5055)"
+            }
+          ]
+        },
+        {
+          "key": "deck",
+          "label": "데크",
+          "contract": true,
+          "choices": [
+            {
+              "key": "std",
+              "label": "석재데크 15㎡",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "기본 제공 면적"
+            },
+            {
+              "key": "more",
+              "label": "면적 추가",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "추가 시공 면적은 별도 협의"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "equipment",
+      "label": "설비",
+      "items": [
+        {
+          "key": "evb",
+          "label": "외부전동차양",
+          "contract": true,
+          "choices": [
+            {
+              "key": "std",
+              "label": "표준 사양",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "남측 전동 블라인드 + 동·서측 수동"
+            },
+            {
+              "key": "all",
+              "label": "전체 창 전동",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "모든 창에 외부 전동 블라인드"
+            },
+            {
+              "key": "wind",
+              "label": "풍속 센서 추가",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "강풍이 불면 자동으로 접히는 시스템"
+            }
+          ]
+        },
+        {
+          "key": "ventilation",
+          "label": "환기장치",
+          "contract": true,
+          "choices": [
+            {
+              "key": "std",
+              "label": "표준 열회수환기장치",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "열회수형 환기장치, 덕트·소음기·디퓨저·필터 포함"
+            },
+            {
+              "key": "upper",
+              "label": "상위 기종",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "성능 검토 후 기기 변경"
+            }
+          ]
+        },
+        {
+          "key": "hvac",
+          "label": "냉난방",
+          "contract": true,
+          "choices": [
+            {
+              "key": "std",
+              "label": "바닥 난방",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "온수 난방 배관 (XL 파이프) + 방통 몰탈"
+            },
+            {
+              "key": "radiant",
+              "label": "복사냉방 추가",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "천장·벽 복사냉방 설비 추가"
+            }
+          ]
+        },
+        {
+          "key": "boiler",
+          "label": "보일러",
+          "contract": true,
+          "choices": [
+            {
+              "key": "gas",
+              "label": "콘덴싱 가스보일러",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "각방 온도조절기는 옵션"
+            }
+          ]
+        },
+        {
+          "key": "solar",
+          "label": "태양광",
+          "contract": true,
+          "choices": [
+            {
+              "key": "none",
+              "label": "설치 안 함",
+              "base": true,
+              "delta_manwon": 0,
+              "desc": "신재생에너지 설비는 별도 공사"
+            },
+            {
+              "key": "consult",
+              "label": "설치 상담 신청",
+              "base": false,
+              "delta_manwon": null,
+              "desc": "별도 공사. 계약서 요약에 '상담 요청'으로 표시",
+              "contract_text": "상담 요청"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "unit": "만원",
+  "approx": true,
+  "notice": "옵션 증감은 기본 사양 대비 개략 금액이며 현장 여건에 따라 달라질 수 있음",
+  "updated": "2026-11-28",
+  "version": 2
+}

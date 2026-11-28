@@ -264,6 +264,32 @@
   .step-line { width:48px; height:2px; background:#e2e8f0; }
   .step-line.done { background:var(--success); }
   .step-text { font-size:11px; color:var(--text-sub); position:absolute; margin-top:32px; white-space:nowrap; transform:translateX(-50%); left:14px; }
+
+  /* 상단 이전/다음 (설계 흐름 페이지) */
+  .btn-nav-prev { background:#f1f5f9; border:none; border-radius:8px; padding:8px 18px; font-size:13px; font-weight:600; color:var(--text); cursor:pointer; }
+  .btn-nav-prev:hover { background:#e2e8f0; }
+  .btn-nav-next { background:var(--primary); border:none; border-radius:8px; padding:8px 18px; font-size:13px; font-weight:600; color:#fff; cursor:pointer; }
+  .btn-nav-next:hover { background:var(--primary-light); }
+  .btn-nav-next:disabled { opacity:.4; cursor:not-allowed; }
+  .type-card.selected { border-color:var(--primary); background:#e8f5ee; }
+  /* 사양 선택 : 소분류 버튼 (넘치면 줄바꿈) */
+  .spec-sub { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .spec-sub-btn { padding:7px 12px; border-radius:999px; border:2px solid var(--border); background:#fff; font-size:13px; font-weight:600; color:var(--text-sub); cursor:pointer; transition:all .15s; }
+  .spec-sub-btn:hover { border-color:var(--primary-light); color:var(--primary); }
+  .spec-sub-btn.active { border-color:var(--primary); background:var(--primary); color:#fff; }
+  .spec-sub-btn.changed:not(.active) { border-color:var(--primary-light); color:var(--primary); }
+  .spec-sub-btn.changed::after { content:' •'; }
+  .mat-card-delta { font-size:12px; font-weight:700; color:var(--primary); white-space:nowrap; margin-left:6px; }
+  .spec-summary { background:#f0fdf4; border-radius:10px; padding:12px 16px; font-size:13px; color:#166534; }
+  .spec-sum-row { display:flex; justify-content:space-between; gap:8px; }
+  .spec-sum-row.total { border-top:1px dashed #bbf7d0; margin-top:6px; padding-top:6px; font-weight:700; }
+  @media(max-width:480px){
+    .top-nav { padding:12px 14px; }
+    .nav-logo { font-size:19px; }
+    .nav-btns { gap:6px; }
+    .btn-nav-prev, .btn-nav-next, .btn-home, .btn-back { padding:7px 12px; font-size:12px; }
+    .custom-panel { padding:18px; }
+  }
 </style>
 </head>
 <body>
@@ -287,7 +313,7 @@
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
-        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-custom-select', this)">견적내기</button>
       </div>
     </div>
   <div class="landing-hero">
@@ -297,7 +323,7 @@
     <div class="hero-photo" style="background:none;padding:0;overflow:hidden;">
       <img src="hero_photo.png" alt="PHIKO 표준주택" style="width:100%;height:100%;object-fit:cover;display:block;">
     </div>
-    <button class="btn-start" onmousedown="goTo('page-type-select')">표준주택 설계 시작하기</button>
+    <button class="btn-start" onmousedown="goTo('page-custom-select')">표준주택 설계 시작하기</button>
     <div class="landing-features">
       <div class="feat-card">
         <div class="feat-icon">
@@ -351,7 +377,7 @@
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
-        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-custom-select', this)">견적내기</button>
       </div>
     </div>
   <iframe src="site-placement/index.html" style="flex:1;width:100%;border:none;display:block;"></iframe>
@@ -374,7 +400,7 @@
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
-        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-custom-select', this)">견적내기</button>
       </div>
     </div>
   <iframe src="structure-guide/index.html" style="flex:1;width:100%;border:none;display:block;"></iframe>
@@ -400,7 +426,7 @@
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
-        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-custom-select', this)">견적내기</button>
       </div>
     </div>
   <div class="page-content">
@@ -518,7 +544,7 @@
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
-        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-custom-select', this)">견적내기</button>
       </div>
     </div>
   <div class="page-content">
@@ -689,7 +715,7 @@
       <button class="local-tab active" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
-        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-custom-select', this)">견적내기</button>
       </div>
     </div>
   <div class="page-content">
@@ -721,7 +747,7 @@
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
-        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-custom-select', this)">견적내기</button>
       </div>
     </div>
   <div class="page-content">
@@ -779,7 +805,7 @@
       <button class="local-tab" onmousedown="goToTab('page-gallery', this)">갤러리</button>
       <div class="tab-cta-group">
         <button class="local-tab local-tab-cta" onmousedown="goToTab('page-site-placement', this)">내 땅에 배치해보기</button>
-        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-type-select', this)">견적내기</button>
+        <button class="local-tab local-tab-cta" onmousedown="goToTab('page-custom-select', this)">견적내기</button>
       </div>
     </div>
   <div class="page-content">
@@ -849,123 +875,21 @@
 </div>
 
 <!-- ============================================================ -->
-<!--  PAGE 1: 스탠다드 / 커스텀 선택                              -->
-<!-- ============================================================ -->
-<div id="page-type-select" class="page">
-  <nav class="top-nav">
-    <div class="nav-logo" onmousedown="goTo('page-landing')" style="cursor:pointer;">PHI<span>KO</span></div>
-    <div class="nav-btns">
-      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
-    </div>
-  </nav>
-  <div class="page-content">
-    <div class="section-title">주택 유형 선택</div>
-    <div class="section-sub">원하시는 주택 유형을 선택해 주세요.</div>
-    <div class="type-grid">
-      <div class="type-card" onmousedown="goTo('page-standard-select')">
-        <div class="type-card-icon">
-          <svg viewBox="0 0 48 48" fill="none">
-            <path d="M8 20L24 8l16 12v20H8z" fill="#1B5E3B" opacity=".8"/>
-            <rect x="18" y="28" width="12" height="12" rx="2" fill="#fff" opacity=".7"/>
-          </svg>
-        </div>
-        <h3>스탠다드형</h3>
-        <p>PHIKO 검증 완료된 표준 설계 모델.<br>빠르고 안전하게 시작하세요.</p>
-      </div>
-      <div class="type-card" onmousedown="goTo('page-custom-select')">
-        <div class="type-card-icon">
-          <svg viewBox="0 0 48 48" fill="none">
-            <circle cx="24" cy="24" r="14" fill="#f59e0b" opacity=".7"/>
-            <path d="M24 10v4M24 34v4M10 24h4M34 24h4" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="24" cy="24" r="5" fill="#fff"/>
-          </svg>
-        </div>
-        <h3>커스텀형</h3>
-        <p>구조·재질·색상을 직접 선택하는<br>완전 맞춤형 설계 옵션.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!--  PAGE 2: 스탠다드 - 구조 선택                                -->
-<!-- ============================================================ -->
-<div id="page-standard-select" class="page">
-  <nav class="top-nav">
-    <div class="nav-logo" onmousedown="goTo('page-landing')" style="cursor:pointer;">PHI<span>KO</span></div>
-    <div class="nav-btns">
-      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
-      <button class="btn-back" onmousedown="goTo('page-type-select')">이전</button>
-    </div>
-  </nav>
-  <div class="page-content">
-    <div class="section-title">스탠다드형 구조 선택</div>
-    <div class="section-sub">구조 유형을 선택하면 3D 모델을 확인하실 수 있습니다.</div>
-    <div class="type-grid">
-      <div class="type-card" onclick="selectStandard('RC조')">
-        <div class="type-card-icon">
-          <svg viewBox="0 0 48 48" fill="none">
-            <rect x="10" y="16" width="28" height="22" rx="2" fill="#1B5E3B" opacity=".7"/>
-            <path d="M6 18L24 6l18 12" stroke="#1B5E3B" stroke-width="3" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <h3>RC조</h3>
-        <p>철근 콘크리트 구조.<br>내구성·방음·내화 우수.<br>패시브 외단열 적용.</p>
-      </div>
-      <div class="type-card" onclick="selectStandard('ALC조')">
-        <div class="type-card-icon">
-          <svg viewBox="0 0 48 48" fill="none">
-            <rect x="8" y="14" width="32" height="24" rx="4" fill="#4CAF7D" opacity=".7"/>
-            <rect x="14" y="20" width="8" height="8" rx="1" fill="#fff" opacity=".7"/>
-            <rect x="26" y="20" width="8" height="8" rx="1" fill="#fff" opacity=".7"/>
-          </svg>
-        </div>
-        <h3>ALC조</h3>
-        <p>고성능 경량 기포 콘크리트.<br>친환경·단열·내화 우수.<br>층수 제한 있음.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!--  PAGE 3: 스탠다드 - 3D 모델 뷰어                            -->
-<!-- ============================================================ -->
-<div id="page-standard-model" class="page">
-  <nav class="top-nav">
-    <div class="nav-logo" onmousedown="goTo('page-landing')" style="cursor:pointer;">PHI<span>KO</span></div>
-    <div class="nav-btns">
-      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
-      <button class="btn-back" onmousedown="goTo('page-standard-select')">이전</button>
-    </div>
-  </nav>
-  <div class="page-content" style="max-width:800px;">
-    <div class="section-title" id="standard-model-title">RC조 표준 모델</div>
-    <div class="section-sub">PHIKO 인증 표준 설계입니다. 3D 모델을 확인 후 다음으로 진행하세요.</div>
-    <div class="viewer-wrap">
-      <canvas id="standard-canvas"></canvas>
-    </div>
-    <div class="btn-row">
-      <button class="btn-primary" onmousedown="goTo('page-care')">Care+ 서비스 선택</button>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!--  PAGE 4: 커스텀 - 구조 선택                                  -->
+<!--  설계 1 : 구조 선택                                  -->
 <!-- ============================================================ -->
 <div id="page-custom-select" class="page">
   <nav class="top-nav">
     <div class="nav-logo" onmousedown="goTo('page-landing')" style="cursor:pointer;">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
-      <button class="btn-back" onmousedown="goTo('page-type-select')">이전</button>
+      <button class="btn-nav-prev" onmousedown="navPrev()">이전</button>
+      <button class="btn-nav-next" onmousedown="navNext()">다음</button>
     </div>
   </nav>
   <div class="page-content">
-    <div class="section-title">커스텀형 구조 선택</div>
-    <div class="section-sub">원하시는 구조를 선택하면 상세 커스터마이징 페이지로 이동합니다.</div>
+    <div class="section-title">구조 선택</div>
+    <div class="section-sub">구조를 선택하면 3D 모델과 사양 선택 화면으로 이동합니다.</div>
     <div class="struct-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
-      <div class="type-card" onclick="selectCustomStruct('RC조')">
+      <div class="type-card" data-struct="RC조" onclick="selectStruct('RC조')">
         <div class="type-card-icon">
           <svg viewBox="0 0 48 48" fill="none">
             <rect x="10" y="16" width="28" height="22" rx="2" fill="#1B5E3B" opacity=".7"/>
@@ -975,7 +899,7 @@
         <h3>RC조</h3>
         <p>철근 콘크리트 구조.<br>내구성·방음·내화 최상.</p>
       </div>
-      <div class="type-card" onclick="selectCustomStruct('경량목구조')">
+      <div class="type-card" data-struct="경량목구조" onclick="selectStruct('경량목구조')">
         <div class="type-card-icon">
           <svg viewBox="0 0 48 48" fill="none">
             <rect x="8" y="18" width="32" height="20" rx="2" fill="#6B3A1F" opacity=".6"/>
@@ -985,7 +909,7 @@
         <h3>경골목구조</h3>
         <p>PHIKO 표준주택 기본 구조.<br>패시브 품질 최우수.</p>
       </div>
-      <div class="type-card" onclick="selectCustomStruct('스틸조')">
+      <div class="type-card" data-struct="스틸조" onclick="selectStruct('스틸조')">
         <div class="type-card-icon">
           <svg viewBox="0 0 48 48" fill="none">
             <rect x="10" y="18" width="28" height="20" rx="2" fill="#4a5568" opacity=".7"/>
@@ -995,7 +919,7 @@
         <h3>스틸조</h3>
         <p>경량 철골 구조.<br>시공 속도·정밀도 우수.</p>
       </div>
-      <div class="type-card" onclick="selectCustomStruct('ALC조')">
+      <div class="type-card" data-struct="ALC조" onclick="selectStruct('ALC조')">
         <div class="type-card-icon">
           <svg viewBox="0 0 48 48" fill="none">
             <rect x="8" y="14" width="32" height="24" rx="4" fill="#4CAF7D" opacity=".7"/>
@@ -1006,166 +930,53 @@
         <h3>ALC조</h3>
         <p>경량 기포 콘크리트.<br>친환경·단열·내화.</p>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!--  PAGE 5: 커스텀 RC조 - 커스터마이징                         -->
-<!-- ============================================================ -->
-<div id="page-custom-rc" class="page">
-  <nav class="top-nav">
-    <div class="nav-logo" onmousedown="goTo('page-landing')" style="cursor:pointer;">PHI<span>KO</span></div>
-    <div class="nav-btns">
-      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
-      <button class="btn-back" onmousedown="goTo('page-custom-select')">이전</button>
-    </div>
-  </nav>
-  <div class="page-content" style="max-width:1560px;">
-    <div class="section-title">RC조 커스터마이징</div>
-    <div class="section-sub">지붕과 벽체 마감재를 선택하세요.</div>
-    <div class="customizer-layout">
-      <!-- 3D 뷰어 -->
-      <div>
-        <div class="viewer-wrap">
-          <canvas id="custom-canvas"></canvas>
+      <div class="type-card" data-struct="중목구조" onclick="selectStruct('중목구조')">
+        <div class="type-card-icon">
+          <svg viewBox="0 0 48 48" fill="none">
+            <rect x="8" y="18" width="32" height="20" rx="2" fill="#8B5A2B" opacity=".55"/>
+            <path d="M14 18v20M24 18v20M34 18v20" stroke="#8B5A2B" stroke-width="2.5"/>
+            <path d="M6 20L24 8l18 12" stroke="#8B5A2B" stroke-width="3" stroke-linecap="round"/>
+          </svg>
         </div>
-        <div class="btn-row">
-          <button class="btn-primary" onmousedown="goTo('page-care')">커스터마이징 완료 - Care+ 선택</button>
-        </div>
-      </div>
-      <!-- 옵션 패널 -->
-      <div class="custom-panel">
-        <!-- 탭 -->
-        <div class="tab-bar">
-          <button class="tab-btn active" onclick="switchRcTab('roof',this)">지붕</button>
-          <button class="tab-btn" onclick="switchRcTab('wall',this)">벽체</button>
-        </div>
-
-        <!-- ── 지붕 탭 (RC조 = 평지붕) ── -->
-        <div id="rc-tab-roof" class="tab-panel active">
-          <div class="panel-title">지붕 마감 선택</div>
-
-          <!-- 기본 마감 고정 안내 -->
-          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;font-size:13px;color:#166534;margin-bottom:16px;">
-            <strong>기본 마감</strong> — 역전지붕 + 쇄석 마감 (고정)
-          </div>
-
-          <!-- 추가 마감 선택 -->
-          <div class="option-label">추가 마감 선택 <span style="font-size:11px;color:#888;">(선택사항)</span></div>
-          <div class="option-chips" id="roof-extra-chips">
-            <div class="mat-chip selected" data-roof-extra="none" onclick="selectRoofExtra(this)">
-              <div class="mat-chip-name">없음 (쇄석 노출)</div>
-            </div>
-            <div class="mat-chip" data-roof-extra="stone" onclick="selectRoofExtra(this)">
-              <div class="mat-chip-thumb" style="background:linear-gradient(135deg,#a8a29e,#78716c,#a8a29e);background-size:20px 20px;"></div>
-              <div class="mat-chip-name">석재 타일</div>
-            </div>
-            <div class="mat-chip" data-roof-extra="deck" onclick="selectRoofExtra(this)">
-              <div class="mat-chip-thumb" style="background:repeating-linear-gradient(90deg,#92400e 0px,#92400e 18px,#78350f 18px,#78350f 20px);"></div>
-              <div class="mat-chip-name">데크</div>
-            </div>
-          </div>
-
-          <div id="roof-selection-summary" style="background:#f0f9ff;border-radius:10px;padding:12px 16px;font-size:13px;color:#0369a1;margin-top:16px;">
-            <strong>선택:</strong> 역전지붕 + 쇄석 마감
-          </div>
-        </div>
-
-        <!-- ── 벽체 탭 ── -->
-        <div id="rc-tab-wall" class="tab-panel">
-          <div class="panel-title">벽체 마감 선택</div>
-          <div class="option-label">마감재 선택</div>
-
-          <!-- 자재 카드 (1단계) -->
-          <div id="wall-mat-cards" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-
-            <!-- 외단열미장 -->
-            <div class="mat-card selected" data-wall-mat="외단열미장" onclick="selectWallMat(this)">
-              <div class="mat-card-thumb" style="background:linear-gradient(135deg,#e5e7eb,#f9fafb);"></div>
-              <div class="mat-card-info">
-                <div class="mat-card-name">외단열미장 (EIFS)</div>
-                <div class="mat-card-desc">색상 선택 가능</div>
-              </div>
-            </div>
-
-            <!-- 벽돌타일 -->
-            <div class="mat-card" data-wall-mat="벽돌타일" onclick="selectWallMat(this)">
-              <div class="mat-card-thumb" style="background:repeating-linear-gradient(180deg,#c2410c 0px,#c2410c 10px,#92400e 10px,#92400e 12px);"></div>
-              <div class="mat-card-info">
-                <div class="mat-card-name">벽돌타일</div>
-                <div class="mat-card-desc">색상 선택 가능</div>
-              </div>
-            </div>
-
-            <!-- 사이딩 -->
-            <div class="mat-card" data-wall-mat="사이딩" onclick="selectWallMat(this)">
-              <div class="mat-card-thumb" style="background:repeating-linear-gradient(180deg,#374151 0px,#374151 14px,#1f2937 14px,#1f2937 16px);"></div>
-              <div class="mat-card-info">
-                <div class="mat-card-name">사이딩</div>
-                <div class="mat-card-desc">제품 색상 선택</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 색상/제품 선택 (2단계 — 자재별 동적 표시) -->
-          <div id="wall-color-section">
-            <div class="option-label" id="wall-color-label">색상 선택</div>
-            <div class="color-swatches" id="wall-color-swatches"></div>
-          </div>
-
-          <div id="wall-selection-summary" style="background:#f0fdf4;border-radius:10px;padding:12px 16px;font-size:13px;color:#166534;margin-top:16px;">
-            <strong>선택:</strong> 외단열미장
-          </div>
-        </div>
+        <h3>중목구조</h3>
+        <p>기둥·보 목구조.<br>계약금액은 별도 협의.</p>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ============================================================ -->
-<!--  PAGE 6: 커스텀 기타 구조 - 커스터마이징                    -->
+<!--  설계 2 : 3D + 사양 선택 (구조 공통)                    -->
 <!-- ============================================================ -->
 <div id="page-custom-other" class="page">
   <nav class="top-nav">
     <div class="nav-logo" onmousedown="goTo('page-landing')" style="cursor:pointer;">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
-      <button class="btn-back" onmousedown="goTo('page-custom-select')">이전</button>
+      <button class="btn-nav-prev" onmousedown="navPrev()">이전</button>
+      <button class="btn-nav-next" onmousedown="navNext()">다음</button>
     </div>
   </nav>
   <div class="page-content" style="max-width:1560px;">
-    <div class="section-title" id="other-struct-title">경량목구조 커스터마이징</div>
-    <div class="section-sub">외피 색상과 재질을 선택하세요.</div>
+    <div class="section-title" id="other-struct-title">사양 선택</div>
+    <div class="section-sub">마감재료와 설비를 고르면 3D 모델과 기본 사양 대비 증감이 바로 바뀝니다.</div>
     <div class="customizer-layout">
       <div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+          <label for="other-size" style="font-size:14px;font-weight:700;color:var(--text);">평형 · 타입</label>
+          <select id="other-size" onchange="selectSize(this.value)" style="padding:6px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px;">
+            <option value="38-S">38-S (1층, 다락 없음)</option><option value="38-W">38-W (1층, 다락 있음)</option>
+            <option value="50D-S">50D-S (2층, 다락 없음)</option><option value="50D-W">50D-W (2층, 다락 있음)</option>
+          </select>
+          <span id="other-model-note" style="font-size:12.5px;color:var(--text-sub);"></span>
+        </div>
         <div class="viewer-wrap">
           <canvas id="other-canvas"></canvas>
         </div>
         <div class="btn-row">
-          <button class="btn-primary" onmousedown="goTo('page-care')">커스터마이징 완료 - Care+ 선택</button>
+          <button class="btn-primary" onmousedown="navNext()">사양 선택 완료 - Care+ 선택</button>
         </div>
       </div>
-      <div class="custom-panel">
-        <div class="panel-title" id="other-panel-title">외피 재질 선택</div>
-        <!-- BIM 옵션 (구조별 data/options_*.json 이 있으면 표시 : 현재 ALC조) -->
-        <div id="bim-options" style="display:none;"></div>
-        <div id="other-basic-opts">
-        <div class="option-label">벽체 재료</div>
-        <div class="option-chips" id="other-wall-chips">
-          <!-- 동적 생성 -->
-        </div>
-        <div class="option-label">외피 색상</div>
-        <div class="color-swatches">
-          <div class="swatch selected" style="background:#fef3c7;" data-color="#fef3c7" onclick="selectOtherColor(this,'#fef3c7')"></div>
-          <div class="swatch" style="background:#dbeafe;" data-color="#dbeafe" onclick="selectOtherColor(this,'#dbeafe')"></div>
-          <div class="swatch" style="background:#d1fae5;" data-color="#d1fae5" onclick="selectOtherColor(this,'#d1fae5')"></div>
-          <div class="swatch" style="background:#e5e7eb;" data-color="#e5e7eb" onclick="selectOtherColor(this,'#e5e7eb')"></div>
-          <div class="swatch" style="background:#fee2e2;" data-color="#fee2e2" onclick="selectOtherColor(this,'#fee2e2')"></div>
-          <div class="swatch" style="background:#374151;" data-color="#374151" onclick="selectOtherColor(this,'#374151')"></div>
-        </div>
-        </div>
-      </div>
+      <div class="custom-panel" id="spec-panel"></div>
     </div>
   </div>
 </div>
@@ -1177,8 +988,8 @@
   <nav class="top-nav">
     <div class="nav-logo" onmousedown="goTo('page-landing')" style="cursor:pointer;">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
-      <button class="btn-back" id="care-back-btn" onmousedown="goToCareBack()">이전</button>
+      <button class="btn-nav-prev" onmousedown="navPrev()">이전</button>
+      <button class="btn-nav-next" onmousedown="navNext()">다음</button>
     </div>
   </nav>
   <div class="page-content">
@@ -1221,7 +1032,7 @@
       </div>
     </div>
     <div class="btn-row" style="max-width:400px;">
-      <button class="btn-primary" onmousedown="goTo('page-contract')">계약서 확인</button>
+      <button class="btn-primary" onmousedown="navNext()">계약서 확인</button>
     </div>
   </div>
 </div>
@@ -1233,8 +1044,8 @@
   <nav class="top-nav">
     <div class="nav-logo" onmousedown="goTo('page-landing')" style="cursor:pointer;">PHI<span>KO</span></div>
     <div class="nav-btns">
-      <button class="btn-home" onmousedown="goTo('page-landing')">Home</button>
-      <button class="btn-back" onmousedown="goTo('page-care')">이전</button>
+      <button class="btn-nav-prev" onmousedown="navPrev()">이전</button>
+      <button class="btn-nav-next" onmousedown="navNext()">다음</button>
     </div>
   </nav>
   <div class="page-content" style="max-width:720px;">
@@ -1242,26 +1053,14 @@
     <div class="section-sub">선택하신 내용을 최종 확인하세요.</div>
     <div class="contract-box">
       <div class="contract-row">
-        <span class="contract-key">주택 유형</span>
-        <span class="contract-val" id="c-type">-</span>
-      </div>
-      <div class="contract-row">
         <span class="contract-key">구조 방식</span>
         <span class="contract-val" id="c-struct">-</span>
-      </div>
-      <div class="contract-row" id="c-row-roof">
-        <span class="contract-key">지붕 재질</span>
-        <span class="contract-val" id="c-roof">-</span>
-      </div>
-      <div class="contract-row">
-        <span class="contract-key">벽체 재질</span>
-        <span class="contract-val" id="c-wall">-</span>
       </div>
       <div class="contract-row">
         <span class="contract-key">Care+ 플랜</span>
         <span class="contract-val" id="c-care">-</span>
       </div>
-      <!-- BIM 옵션 행 (커스텀 + 옵션 자료가 있는 구조일 때만) -->
+      <!-- 사양 선택 행 (대분류별, data/options_*.json) -->
       <div id="c-opt-rows"></div>
       <div class="contract-row">
         <span class="contract-key">평형 · 타입</span>
@@ -1298,7 +1097,8 @@ const state = {
   wallMat: '외단열미장',
   wallColor: '#f5f0eb',
   care: '베이직',
-  size: '38-S'
+  size: '38-S',
+  spec: {}         // 사양 선택 : spec[소분류] = { choice, color }
 };
 
 // ============================================================
@@ -1310,10 +1110,9 @@ function goTo(pageId) {
   if(target) { target.classList.add('active'); window.scrollTo(0,0); }
 
   if(pageId === 'page-landing') resetState();
-  if(pageId === 'page-standard-model') initStandardViewer();
-  if(pageId === 'page-custom-rc') { initCustomRcViewer(); setTimeout(()=>renderWallColors(state.wallMat),200); }
   if(pageId === 'page-custom-other') initOtherViewer();
   if(pageId === 'page-contract') buildContract();
+  updateNavButtons();
 }
 
 // 상단 탭(특징/제원/갤러리/모델비교/가격/견적내기) 클릭 처리: 페이지 이동 + 탭 활성화 표시
@@ -1348,190 +1147,42 @@ function filterListings(type, btnEl) {
 // 전체 상태 초기화 (랜딩으로 돌아올 때)
 // ============================================================
 function resetState() {
-  state.type     = '';
-  state.struct   = '';
-  state.roofMat  = '역전지붕+쇄석';
-  state.roofColor = '#9ca3af';
-  state.wallMat  = '외단열미장';
-  state.wallColor = '#f5f0eb'; // 외단열미장 기본색
-  state.care     = '베이직';
-  bimOpt.sel     = {};
+  state.type   = '';
+  state.struct = '';
+  state.care   = '베이직';
+  state.spec   = {};
+  specUi.cat = null; specUi.item = null;
 }
 
 // ============================================================
-// 스탠다드 선택
+// 설계 흐름 : 구조 선택 → 3D + 사양 선택 → Care+ → 계약서 요약 (11-28 스탠다드/커스텀 구분 없앰)
 // ============================================================
-function selectStandard(structName) {
-  state.type = '스탠다드';
-  state.struct = structName;
-  // 버그2 수정: 스탠다드형은 커스터마이징 없으므로 재질 값을 '표준 사양'으로 초기화
-  state.roofMat = '표준 사양';
-  state.wallMat = '표준 사양';
-  state.roofColor = '-';
-  state.wallColor = '-';
-  document.getElementById('standard-model-title').textContent = structName + ' 표준 모델';
-  goTo('page-standard-model');
-}
-
-// ============================================================
-// 커스텀 구조 선택
-// ============================================================
-const wallOptions = {
-  'RC조':     ['콘크리트 노출','벽돌','드라이비트','타일','목재 사이딩','금속 패널'],
-  '경량목구조':['목재 사이딩','OSB 패널','시멘트 사이딩','금속 패널'],
-  '스틸조':   ['금속 패널','샌드위치 패널','드라이비트','시멘트 보드'],
-  'ALC조':    ['외단열 미장 (기본)','벽돌타일']  // BIM 옵션과 같은 구성 (ALC는 외단열 필수라 'ALC 노출' 제외)
+const FLOW = {
+  'page-custom-select': { prev: 'page-landing',       next: () => state.struct ? 'page-custom-other' : null },
+  'page-custom-other':  { prev: 'page-custom-select', next: () => 'page-care' },
+  'page-care':          { prev: 'page-custom-other',  next: () => 'page-contract' },
+  'page-contract':      { prev: 'page-care',          next: null }
 };
+function currentPage() { const p = document.querySelector('.page.active'); return p ? p.id : ''; }
+function navPrev() { const f = FLOW[currentPage()]; if (f) goTo(f.prev); }
+function navNext() { const f = FLOW[currentPage()]; const n = f && f.next && f.next(); if (n) goTo(n); }
+function updateNavButtons() {
+  const id = currentPage(), f = FLOW[id], page = document.getElementById(id);
+  if (!f || !page) return;
+  const nb = page.querySelector('.btn-nav-next');
+  if (!nb) return;
+  if (!f.next) { nb.style.display = 'none'; return; }
+  nb.style.display = '';
+  nb.disabled = !f.next();
+}
 
-function selectCustomStruct(structName) {
-  state.type = '커스텀';
+function selectStruct(structName) {
+  if (state.struct !== structName) { state.spec = {}; specUi.cat = null; specUi.item = null; }
+  state.type = '';
   state.struct = structName;
-  if(structName === 'RC조') {
-    goTo('page-custom-rc');
-  } else {
-    document.getElementById('other-struct-title').textContent = structName + ' 커스터마이징';
-    const chips = document.getElementById('other-wall-chips');
-    chips.innerHTML = '';
-    (wallOptions[structName] || []).forEach((m,i) => {
-      const d = document.createElement('div');
-      d.className = 'chip' + (i===0?' selected':'');
-      d.textContent = m;
-      d.setAttribute('data-mat', m);
-      d.onclick = function(){
-        document.querySelectorAll('#other-wall-chips .chip').forEach(c=>c.classList.remove('selected'));
-        this.classList.add('selected');
-        state.wallMat = m;
-      };
-      chips.appendChild(d);
-    });
-    if(wallOptions[structName]) state.wallMat = wallOptions[structName][0];
-    setupBimOptions(structName);
-    goTo('page-custom-other');
-  }
-}
-
-// ============================================================
-// RC조 탭 전환
-// ============================================================
-function switchRcTab(tab, btn) {
-  // 버그3 수정: 전체 .tab-btn 대신 RC조 페이지 내부로 범위 한정
-  document.querySelectorAll('#page-custom-rc .tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('#page-custom-rc .tab-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('rc-tab-' + tab).classList.add('active');
-}
-
-// ============================================================
-// 자재별 색상/제품 데이터
-// ============================================================
-const WALL_OPTIONS = {
-  '외단열미장': [
-    { color:'#f5f0eb', label:'아이보리' },
-    { color:'#e5e7eb', label:'라이트그레이' },
-    { color:'#d1d5db', label:'미디엄그레이' },
-    { color:'#fef3c7', label:'크림' },
-    { color:'#fde68a', label:'샌드' },
-    { color:'#dbeafe', label:'라이트블루' },
-    { color:'#bbf7d0', label:'민트' },
-    { color:'#374151', label:'다크그레이' },
-  ],
-  '벽돌타일': [
-    { color:'#c2410c', label:'레드브릭' },
-    { color:'#92400e', label:'브라운브릭' },
-    { color:'#d97706', label:'옐로우브릭' },
-  ],
-  '사이딩': [
-    { color:'#1f2937', label:'차콜' },
-    { color:'#374151', label:'다크그레이' },
-    { color:'#6b7280', label:'그레이' },
-    { color:'#e5e7eb', label:'라이트그레이' },
-    { color:'#92400e', label:'우드브라운' },
-    { color:'#1e3a5f', label:'네이비' },
-  ],
-};
-
-// ============================================================
-// 지붕 추가마감 선택 (RC조 평지붕)
-// ============================================================
-function selectRoofExtra(el) {
-  document.querySelectorAll('#roof-extra-chips .mat-chip').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  const extra = el.getAttribute('data-roof-extra');
-  state.roofMat = extra === 'none' ? '역전지붕+쇄석' : extra === 'stone' ? '역전지붕+석재타일' : '역전지붕+데크';
-
-  // 추가마감별 지붕 색상 적용
-  const colorMap = { none:'#9ca3af', stone:'#78716c', deck:'#92400e' };
-  state.roofColor = colorMap[extra] || '#9ca3af';
-  applyRoofColor(state.roofColor);
-
-  const box = document.getElementById('roof-selection-summary');
-  if(box) box.innerHTML = '<strong>선택:</strong> ' + state.roofMat;
-}
-
-// ============================================================
-// 벽체 선택 (1단계: 자재 / 2단계: 색상)
-// ============================================================
-function selectWallMat(el) {
-  document.querySelectorAll('#wall-mat-cards .mat-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  state.wallMat = el.getAttribute('data-wall-mat');
-  renderWallColors(state.wallMat);
-  updateWallSummary();
-}
-
-function renderWallColors(matName) {
-  const opts = WALL_OPTIONS[matName] || [];
-  const wrap = document.getElementById('wall-color-swatches');
-  const label = document.getElementById('wall-color-label');
-  if(!wrap) return;
-
-  wrap.innerHTML = '';
-  if(opts.length === 0) { wrap.style.display='none'; return; }
-  wrap.style.display = 'flex';
-
-  // 첫 번째 색상을 기본 선택
-  state.wallColor = opts[0].color;
-  applyWallColor(state.wallColor);
-
-  opts.forEach((opt, i) => {
-    const s = document.createElement('div');
-    s.className = 'swatch-rect' + (i === 0 ? ' selected' : '');
-    s.style.background = opt.color;
-    s.title = opt.label;
-    s.onclick = function() {
-      wrap.querySelectorAll('.swatch-rect').forEach(x => x.classList.remove('selected'));
-      s.classList.add('selected');
-      state.wallColor = opt.color;
-      applyWallColor(state.wallColor);
-      updateWallSummary();
-    };
-    wrap.appendChild(s);
-  });
-
-  if(label) label.textContent = matName === '사이딩' ? '제품 색상 선택' : '색상 선택';
-  updateWallSummary();
-}
-
-function updateWallSummary() {
-  const box = document.getElementById('wall-selection-summary');
-  if(!box) return;
-  const colorOpts = WALL_OPTIONS[state.wallMat] || [];
-  const matched = colorOpts.find(o => o.color === state.wallColor);
-  const colorLabel = matched ? matched.label : '';
-  box.innerHTML = '<strong>선택:</strong> ' + state.wallMat + (colorLabel ? ' / ' + colorLabel : '');
-}
-
-// ============================================================
-// Care+ 이전 버튼 — 진입 경로에 따라 올바른 페이지로 이동
-// ============================================================
-function goToCareBack() {
-  if (state.type === '스탠다드') {
-    goTo('page-standard-model');
-  } else if (state.struct === 'RC조') {
-    goTo('page-custom-rc');
-  } else {
-    goTo('page-custom-other');
-  }
+  document.querySelectorAll('#page-custom-select .type-card').forEach(c => c.classList.toggle('selected', c.dataset.struct === structName));
+  document.getElementById('other-struct-title').textContent = structName + ' 사양 선택';
+  goTo('page-custom-other');
 }
 
 // ============================================================
@@ -1544,37 +1195,33 @@ function selectCare(el, name) {
 }
 
 // ============================================================
-// 기타 구조 색상 선택
-// ============================================================
-function selectOtherColor(el, color) {
-  document.querySelectorAll('#page-custom-other .swatch').forEach(s=>s.classList.remove('selected'));
-  el.classList.add('selected');
-  state.wallColor = color;
-  applyOtherColor(color);
-}
-
-// ============================================================
 // 계약서 빌드
 // ============================================================
 function buildContract() {
-  document.getElementById('c-type').textContent = state.type || '-';
   document.getElementById('c-struct').textContent = state.struct || '-';
   document.getElementById('c-care').textContent = state.care;
 
-  // 스탠다드형은 재질 선택 없음 → '표준 사양' 표시
-  if (state.type === '스탠다드') {
-    document.getElementById('c-roof').textContent = '표준 사양';
-    document.getElementById('c-wall').textContent = '표준 사양';
-    const roofRow = document.getElementById('c-row-roof');
-    if (roofRow) roofRow.style.display = '';
-  } else {
-    document.getElementById('c-roof').textContent = state.roofMat + (state.roofColor !== '-' ? ' (' + state.roofColor + ')' : '');
-    document.getElementById('c-wall').textContent = state.wallMat + (state.wallColor !== '-' ? ' (' + state.wallColor + ')' : '');
-    const roofRow = document.getElementById('c-row-roof');
-    if (roofRow) roofRow.style.display = state.struct === 'RC조' ? '' : 'none';
+  // 사양 선택 행 : 대분류별 (구조별 data/options_*.json)
+  const d = specData[state.struct];
+  const box = document.getElementById('c-opt-rows');
+  if (box) {
+    let h = '';
+    if (d) {
+      d.categories.forEach(cat => {
+        h += '<div class="contract-row"><span class="contract-key" style="font-weight:700;color:var(--primary);">' + cat.label + '</span><span></span></div>';
+        cat.items.forEach(it => {
+          const s = specSel(it), c = s.choice;
+          const val = c.contract_text ? c.contract_text : c.label + (s.color ? ' / ' + s.color.label : '') + ' (' + deltaTxt(c) + ')';
+          h += '<div class="contract-row"><span class="contract-key">' + it.label + '</span><span class="contract-val">' + val + '</span></div>';
+        });
+      });
+      h += '<div class="contract-row"><span class="contract-key">옵션 증감 합계 (기본 사양 대비, 개략)</span><span class="contract-val">' + totalTxt(specTotal(d)) + '</span></div>';
+      h += '<div style="font-size:12px;color:var(--text-sub);padding:8px 0;">' + d.notice + '</div>';
+    }
+    box.innerHTML = h;
   }
 
-  // 2026년 계약금액 : '가격' 탭 표와 같은 값 (홈페이지 금액, VAT 별도)
+  // 2026년 계약금액 : '가격' 탭 표와 같은 값 (홈페이지 금액, VAT 별도). ALC 는 별도 협의
   const PRICE26 = {
     '경량목구조': {'38-S':363400000,'38-W':418900000,'50D-S':415000000,'50D-W':453200000},
     'RC조':       {'38-S':437000000,'38-W':492500000,'50D-S':471600000,'50D-W':512100000},
@@ -1582,30 +1229,14 @@ function buildContract() {
   };
   PRICE26['경골목구조'] = PRICE26['경량목구조'];
   const sizeSel = document.getElementById('c-size');
-  if (sizeSel) sizeSel.value = state.size;
+  if (sizeSel) {
+    const o38 = sizeSel.querySelector('option[value="38-S"]');
+    if (o38) o38.textContent = (d && d.size_label) ? d.size_label : '38-S (1층, 다락 없음)';
+    sizeSel.value = state.size;
+  }
   const base = (PRICE26[state.struct] || {})[state.size];
   const careYear = state.care === '프리미엄' ? 59000 * 12 : state.care === '스탠다드' ? 29000 * 12 : 0;
   const won = n => n.toLocaleString() + '원';
-  // BIM 옵션 행 : 커스텀 + 옵션 자료가 있는 구조 (기본 금액이 '별도 협의'여도 증감만 표시)
-  const optBox = document.getElementById('c-opt-rows');
-  const od = state.type === '커스텀' ? bimOpt.data[state.struct] : null;
-  let optTotal = 0;
-  if (optBox) {
-    optBox.innerHTML = '';
-    if (od) {
-      let h = '';
-      od.groups.forEach(g => {
-        const c = bimChoice(od, g);
-        h += '<div class="contract-row"><span class="contract-key">' + g.label + '</span><span class="contract-val">' + c.label +
-             ' (' + deltaTxt(c) + ')' + '</span></div>';
-      });
-      optTotal = bimDeltaTotal(od);
-      h += '<div class="contract-row"><span class="contract-key">옵션 증감 합계 (기본 사양 대비, 개략)</span><span class="contract-val">' +
-           totalTxt(od, optTotal) + '</span></div>';
-      h += '<div style="font-size:12px;color:var(--text-sub);padding:8px 0;">' + od.notice + '</div>';
-      optBox.innerHTML = h;
-    }
-  }
   if (!base) {
     document.getElementById('c-price').textContent = '별도 협의';
     document.getElementById('c-total').textContent = '별도 협의 (상담 후 결정)';
@@ -1633,28 +1264,46 @@ window.addEventListener('resize', () => {
 });
 
 // ============================================================
-// BIM 모델(GLB) 공용 로더 : 실제 축척(m) 유지, 재질 이름으로 지붕/외벽 구분
+// BIM 모델(GLB) 공용 로더 : 실제 축척(m) 유지, 노드·재질 이름으로 외벽(Wall)·지붕(Roof)·창틀(Window_frame) 구분
+// 구조를 늘릴 때는 아래 두 곳에 파일만 추가 : 모델(GLB) + 사양 자료(data/options_*.json)
 // ============================================================
-// 구조를 늘릴 때는 여기 두 곳에 파일만 추가 : 모델(GLB, 노드 Wall·Roof, 재질 Wall_brick 등) + 옵션 자료(JSON)
-const BIM_MODELS  = { 'ALC조': 'models/alc_38s.glb' };
-const BIM_OPTIONS = { 'ALC조': 'data/options_alc_38s.json' };
+// BIM_MODELS[구조][타입] : 다락 있는 W 타입은 다락 단면 도면이 없어 모델이 없음 → 같은 평형의 S 타입으로 대신 보여줌
+const BIM_MODELS = {
+  'ALC조':     { '38-S': 'models/alc_38s.glb',   '50D-S': 'models/alc_50ds.glb' },
+  'RC조':      { '38-S': 'models/rc_38s.glb',    '50D-S': 'models/rc_50ds.glb' },
+  '경량목구조': { '38-S': 'models/wood_38s.glb',  '50D-S': 'models/wood_50ds.glb' },
+  '스틸조':    { '38-S': 'models/steel_38s.glb', '50D-S': 'models/steel_50ds.glb' },
+  '중목구조':   { '38-S': 'models/jung_38s.glb',  '50D-S': 'models/jung_50ds.glb' }
+};
+BIM_MODELS['경골목구조'] = BIM_MODELS['경량목구조'];
+const BIM_OPTIONS = { 'ALC조': 'data/options_alc_38s.json', 'RC조': 'data/options_rc.json', '중목구조': 'data/options_jung.json',
+                      '경량목구조': 'data/options_wood.json', '경골목구조': 'data/options_wood.json', '스틸조': 'data/options_steel.json' };
+// 고른 타입의 모델이 없으면 가까운 타입 (38-W → 38-S, 50D-W → 50D-S, 그래도 없으면 38-S)
+function bimModelFor(struct, size) {
+  const m = BIM_MODELS[struct];
+  if (!m) return null;
+  if (m[size]) return { url: m[size], shown: size };
+  const near = size.startsWith('50D') ? '50D-S' : '38-S';
+  const shown = m[near] ? near : '38-S';
+  return m[shown] ? { url: m[shown], shown } : null;
+}
+function selectSize(size) {
+  state.size = size;
+  initOtherViewer();
+}
 function loadBimModel(url, scene, camera, controls, opt) {
-  const roofList = [], wallList = [];
+  const parts = { Wall: [], Roof: [], Window_frame: [] };
   new THREE.GLTFLoader().load(url, function(gltf) {
     const model = gltf.scene;
     model.traverse(function(child) {
       if (!child.isMesh) return;
       const n = (child.name || '') + ' ' + ((child.material && child.material.name) || '');
       child.material = child.material.clone();
-      if (/roof|Roof/.test(n)) { roofList.push(child); if (opt.roofColor) child.material.color.set(opt.roofColor); }
-      else if (/ext_finish|Wall/.test(n)) { child.userData.baseMaterial = child.material; wallList.push(child); if (opt.wallColor) child.material.color.set(opt.wallColor); }
+      child.userData.baseMaterial = child.material;
+      if (/Window_frame/.test(n)) parts.Window_frame.push(child);
+      else if (/roof|Roof/.test(n)) parts.Roof.push(child);
+      else if (/ext_finish|Wall/.test(n) && !/Interior/.test(n)) parts.Wall.push(child);
     });
-    // GLB 안의 재질 전체 (메시에 안 쓰인 옵션 재질 Wall_brick 등 포함)
-    const mats = {};
-    const matsReady = gltf.parser.getDependencies('material').then(function(list) {
-      list.forEach(function(m) { if (m && m.name) mats[m.name] = m; });
-      return mats;
-    }).catch(function() { return mats; });
     const box = new THREE.Box3().setFromObject(model);
     const c = box.getCenter(new THREE.Vector3());
     model.position.set(-c.x, -box.min.y, -c.z);
@@ -1663,7 +1312,12 @@ function loadBimModel(url, scene, camera, controls, opt) {
     camera.position.set(d * 0.75, d * 0.55, d * 0.95);
     controls.target.set(0, (box.max.y - box.min.y) * 0.35, 0);
     controls.update();
-    if (opt.onLoad) matsReady.then(function(m) { opt.onLoad(roofList, wallList, m); });
+    // GLB 안의 재질 전체 (메시에 안 쓰인 옵션 재질 Wall_brick 등 포함)
+    gltf.parser.getDependencies('material').then(function(list) {
+      const mats = {};
+      list.forEach(function(m) { if (m && m.name) mats[m.name] = m; });
+      if (opt.onLoad) opt.onLoad(parts, mats);
+    }).catch(function() { if (opt.onLoad) opt.onLoad(parts, {}); });
   }, undefined, function(err) {
     console.warn(url + ' 로드 실패, 절차적 모델 사용', err);
     if (opt.onFail) opt.onFail();
@@ -1671,268 +1325,140 @@ function loadBimModel(url, scene, camera, controls, opt) {
 }
 
 // ============================================================
-// BIM 옵션 (커스텀) : data/options_*.json → 선택지·기본 사양 대비 증감 (만원, 개략)
+// 사양 선택 : 대분류(마감재료·설비) → 소분류 → 선택지·색상, 기본 사양 대비 증감 (만원, 개략)
 // ============================================================
-const bimOpt = { data: {}, sel: {} };          // data[구조] = 옵션 자료, sel[그룹키] = 선택 키
-const bimModel = { walls: [], mats: {} };      // 커스텀 뷰어의 외벽 메시·GLB 재질
+const specUi = { cat: null, item: null };
+const specData = {};                                                   // specData[구조] = data/options_*.json
+const bimScene = { parts: { Wall: [], Roof: [], Window_frame: [] }, mats: {} };
 const manwon = n => (n > 0 ? '+' : n < 0 ? '-' : '') + Math.abs(n).toLocaleString() + '만원';
 // 증감 표기 : 기본 / 별도 협의(금액 미확정, delta_manwon = null) / 약 ±N만원
 const deltaTxt = c => c.base ? '기본' : (c.delta_manwon === null || c.delta_manwon === undefined) ? '별도 협의' : '약 ' + manwon(c.delta_manwon);
-const bimHasPending = d => !!d && d.groups.some(g => { const c = bimChoice(d, g); return !c.base && (c.delta_manwon === null || c.delta_manwon === undefined); });
-const totalTxt = (d, total) => (total ? '약 ' + manwon(total) : (bimHasPending(d) ? '' : '변동 없음')) + (bimHasPending(d) ? (total ? ' + ' : '') + '별도 협의 항목' : '');
 
-function loadBimOptions(struct) {
+function loadSpec(struct) {
   const url = BIM_OPTIONS[struct];
   if (!url) return Promise.resolve(null);
-  if (bimOpt.data[struct]) return Promise.resolve(bimOpt.data[struct]);
+  if (specData[struct]) return Promise.resolve(specData[struct]);
   return fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(d => { bimOpt.data[struct] = d; return d; })
+    .then(d => { specData[struct] = d; return d; })
     .catch(err => { console.warn(url + ' 읽기 실패', err); return null; });
 }
-
-function bimChoice(d, g) {
-  return g.choices.find(c => c.key === bimOpt.sel[g.key]) || g.choices.find(c => c.base) || g.choices[0];
+function specItems(d) { return d.categories.reduce((a, c) => a.concat(c.items), []); }
+function specSel(item) {
+  const s = (state.spec || {})[item.key] || {};
+  const choice = item.choices.find(x => x.key === s.choice) || item.choices.find(x => x.base) || item.choices[0];
+  const cs = choice.colors || [];
+  const color = cs.find(k => k.hex === s.color) || cs.find(k => k.base) || cs[0] || null;
+  return { choice, color };
+}
+function specTotal(d) {
+  let sum = 0, pending = false;
+  specItems(d).forEach(it => {
+    const c = specSel(it).choice;
+    if (c.base) return;
+    if (c.delta_manwon === null || c.delta_manwon === undefined) pending = true; else sum += c.delta_manwon;
+  });
+  return { sum, pending };
+}
+function totalTxt(t) {
+  return (t.sum ? '약 ' + manwon(t.sum) : (t.pending ? '' : '변동 없음')) + (t.pending ? (t.sum ? ' + ' : '') + '별도 협의 항목' : '');
 }
 
-function bimDeltaTotal(d) {
-  return d ? d.groups.reduce((a, g) => a + (bimChoice(d, g).delta_manwon || 0), 0) : 0;
-}
-
-function setupBimOptions(struct) {
-  const box = document.getElementById('bim-options');
-  const basic = document.getElementById('other-basic-opts');
-  const title = document.getElementById('other-panel-title');
-  box.style.display = 'none'; basic.style.display = ''; title.textContent = '외피 재질 선택';
-  if (!BIM_OPTIONS[struct]) return;
-  loadBimOptions(struct).then(d => {
-    if (!d || state.struct !== struct) return;
-    d.groups.forEach(g => { if (!bimOpt.sel[g.key]) bimOpt.sel[g.key] = (g.choices.find(c => c.base) || g.choices[0]).key; });
-    basic.style.display = 'none'; box.style.display = ''; title.textContent = '사양 선택';
-    renderBimOptions(d);
+function setupSpec(struct) {
+  const panel = document.getElementById('spec-panel');
+  if (!panel) return;
+  panel.innerHTML = '<div class="info-note">사양 정보를 불러오는 중입니다.</div>';
+  loadSpec(struct).then(d => {
+    if (state.struct !== struct) return;
+    if (!d) { panel.innerHTML = '<div class="info-note">사양 정보를 불러오지 못했습니다.</div>'; return; }
+    if (!d.categories.some(c => c.key === specUi.cat)) { specUi.cat = d.categories[0].key; specUi.item = null; }
+    renderSpec(d);
+    applySpec3D();
   });
 }
 
-function renderBimOptions(d) {
-  const box = document.getElementById('bim-options');
-  let html = '';
-  d.groups.forEach(g => {
-    html += '<div class="option-label">' + g.label + ' <span style="font-size:11px;color:#888;text-transform:none;letter-spacing:0;">' + g.desc + '</span></div>';
-    html += '<div class="option-chips">';
-    g.choices.forEach(c => {
-      const on = bimOpt.sel[g.key] === c.key;
-      const tail = c.base ? ' (기본)' : ' · ' + deltaTxt(c);
-      html += '<div class="chip' + (on ? ' selected' : '') + '" data-group="' + g.key + '" data-key="' + c.key + '">' + c.label + tail + '</div>';
-    });
-    html += '</div>';
+function renderSpec(d) {
+  const panel = document.getElementById('spec-panel');
+  const cat = d.categories.find(c => c.key === specUi.cat) || d.categories[0];
+  if (!cat.items.some(i => i.key === specUi.item)) specUi.item = cat.items[0].key;
+  const item = cat.items.find(i => i.key === specUi.item);
+  const sel = specSel(item);
+  let h = '<div class="tab-bar">' + d.categories.map(c =>
+    '<button class="tab-btn' + (c.key === cat.key ? ' active' : '') + '" data-cat="' + c.key + '">' + c.label + '</button>').join('') + '</div>';
+  h += '<div class="spec-sub">' + cat.items.map(i =>
+    '<button class="spec-sub-btn' + (i.key === item.key ? ' active' : '') + (specSel(i).choice.base ? '' : ' changed') + '" data-item="' + i.key + '">' + i.label + '</button>').join('') + '</div>';
+  if (item.desc) h += '<div class="mat-card-desc" style="margin:-4px 0 12px;">' + item.desc + '</div>';
+  h += '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">';
+  item.choices.forEach(c => {
+    h += '<div class="mat-card' + (c.key === sel.choice.key ? ' selected' : '') + '" data-choice="' + c.key + '">' +
+         (c.thumb ? '<div class="mat-card-thumb" style="background:' + c.thumb + ';"></div>' : '') +
+         '<div class="mat-card-info" style="flex:1;min-width:0;"><div class="mat-card-name">' + c.label + '</div>' +
+         '<div class="mat-card-desc">' + (c.desc || '') + (c.note ? ' · ' + c.note : '') + '</div></div>' +
+         '<div class="mat-card-delta">' + deltaTxt(c) + '</div></div>';
   });
-  const total = bimDeltaTotal(d);
-  html += '<div style="background:#f0fdf4;border-radius:10px;padding:12px 16px;font-size:13px;color:#166534;">';
-  html += '<div style="font-weight:700;margin-bottom:6px;">기본 사양 대비 증감</div>';
-  d.groups.forEach(g => {
-    const c = bimChoice(d, g);
-    html += '<div style="display:flex;justify-content:space-between;gap:8px;"><span>' + g.label + ' : ' + c.label + '</span><span>' +
-            (c.base ? '-' : deltaTxt(c)) + '</span></div>';
-  });
-  html += '<div style="display:flex;justify-content:space-between;gap:8px;border-top:1px dashed #bbf7d0;margin-top:6px;padding-top:6px;font-weight:700;"><span>합계</span><span>' +
-          totalTxt(d, total) + '</span></div>';
-  html += '</div>';
-  html += '<div class="info-note" style="margin-top:10px;">' + d.notice + '</div>';
-  box.innerHTML = html;
-  box.querySelectorAll('.chip').forEach(el => {
-    el.onclick = function() {
-      bimOpt.sel[this.dataset.group] = this.dataset.key;
-      renderBimOptions(d);
-      applyBimMaterials();
-    };
-  });
-  // 계약서 '벽체 재질' 칸 : 외장 마감 선택값
-  const ext = d.groups.find(g => g.choices.some(c => c.model_material));
-  if (ext) { state.wallMat = bimChoice(d, ext).label; state.wallColor = '-'; }
-}
-
-// 외장 선택에 따라 외벽 재질 교체 (Wall ↔ Wall_brick)
-function applyBimMaterials() {
-  const d = bimOpt.data[state.struct];
-  if (!d || !bimModel.walls.length) return;
-  const ext = d.groups.find(g => g.choices.some(c => c.model_material));
-  if (!ext) return;
-  const name = bimChoice(d, ext).model_material;
-  bimModel.walls.forEach(m => {
-    m.material = (name && name !== 'Wall' && bimModel.mats[name]) ? bimModel.mats[name] : (m.userData.baseMaterial || m.material);
-  });
-}
-
-// ============================================================
-// THREE.JS - 스탠다드 뷰어
-// ============================================================
-let stdRenderer, stdScene, stdCamera, stdControls, stdAnimId;
-function initStandardViewer() {
-  const canvas = document.getElementById('standard-canvas');
-  if(stdRenderer) { stdRenderer.dispose(); cancelAnimationFrame(stdAnimId); }
-  stdScene = new THREE.Scene();
-  stdScene.background = new THREE.Color('#e8f5ee');
-  stdScene.add(new THREE.AmbientLight(0xffffff, 1.2));
-  const dLight = new THREE.DirectionalLight(0xffffff, 1.4);
-  dLight.position.set(5,10,7); stdScene.add(dLight);
-
-  stdCamera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 0.1, 1000);
-  stdCamera.position.set(6,5,10);
-  stdRenderer = new THREE.WebGLRenderer({canvas, antialias:true});
-  fitRenderer(stdRenderer, stdCamera, canvas);
-  stdRenderer.setPixelRatio(window.devicePixelRatio);
-  stdControls = new THREE.OrbitControls(stdCamera, stdRenderer.domElement);
-  stdControls.enableDamping = true;
-
-  const stdUrl = BIM_MODELS[state.struct] || (state.struct === 'RC조' ? 'rc_20.glb' : null);
-  if (stdUrl) {
-    loadBimModel(stdUrl, stdScene, stdCamera, stdControls, { onFail: ()=> buildProceduralHouse(stdScene, '#e2e8f0', '#94a3b8') });
-  } else {
-    buildProceduralHouse(stdScene, '#e2e8f0', '#94a3b8');
+  h += '</div>';
+  if (sel.choice.colors && sel.choice.colors.length) {
+    h += '<div class="option-label">색상 선택' + (sel.color ? ' : ' + sel.color.label : '') + '</div><div class="color-swatches">' +
+         sel.choice.colors.map(k => '<div class="swatch-rect' + (sel.color && k.hex === sel.color.hex ? ' selected' : '') +
+         '" style="background:' + k.hex + ';" title="' + k.label + '" data-color="' + k.hex + '"></div>').join('') + '</div>';
   }
-  animStd();
-}
-function animStd() {
-  stdAnimId = requestAnimationFrame(animStd);
-  stdControls.update();
-  stdRenderer.render(stdScene, stdCamera);
-}
+  const changed = specItems(d).filter(i => !specSel(i).choice.base);
+  h += '<div class="spec-summary"><div style="font-weight:700;margin-bottom:6px;">기본 사양 대비 증감</div>';
+  h += changed.length
+    ? changed.map(i => { const c = specSel(i).choice; return '<div class="spec-sum-row"><span>' + i.label + ' : ' + c.label + '</span><span>' + deltaTxt(c) + '</span></div>'; }).join('')
+    : '<div class="spec-sum-row"><span>모두 기본 사양</span><span>-</span></div>';
+  h += '<div class="spec-sum-row total"><span>합계</span><span>' + totalTxt(specTotal(d)) + '</span></div></div>';
+  h += '<div class="info-note" style="margin-top:10px;">' + d.notice + '</div>';
+  panel.innerHTML = h;
 
-// ============================================================
-// THREE.JS - 커스텀 RC조 뷰어 (rc_20.glb 연동)
-// ============================================================
-let rcRenderer, rcScene, rcCamera, rcControls, rcAnimId;
-let rcRoofMeshes = [], rcWallMeshes = [];
-
-function initCustomRcViewer() {
-  const canvas = document.getElementById('custom-canvas');
-  if(rcRenderer) { rcRenderer.dispose(); cancelAnimationFrame(rcAnimId); }
-  rcRoofMeshes = []; rcWallMeshes = [];
-
-  rcScene = new THREE.Scene();
-  rcScene.background = new THREE.Color('#e8f5ee');
-  rcScene.add(new THREE.AmbientLight(0xffffff, 1.2));
-  const dLight = new THREE.DirectionalLight(0xffffff, 1.6);
-  dLight.position.set(6,12,8); rcScene.add(dLight);
-  const dLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
-  dLight2.position.set(-5,5,-5); rcScene.add(dLight2);
-
-  rcCamera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 0.1, 1000);
-  rcCamera.position.set(8,6,12);
-  rcRenderer = new THREE.WebGLRenderer({canvas, antialias:true});
-  fitRenderer(rcRenderer, rcCamera, canvas);
-  rcRenderer.setPixelRatio(window.devicePixelRatio);
-  rcControls = new THREE.OrbitControls(rcCamera, rcRenderer.domElement);
-  rcControls.enableDamping = true;
-
-  // rc_20.glb 로드 시도
-  const loader = new THREE.GLTFLoader();
-  loader.load(
-    'rc_20.glb',
-    function(gltf) {
-      const model = gltf.scene;
-
-      // 바운딩박스 계산 후 중앙 정렬
-      const box = new THREE.Box3().setFromObject(model);
-      const center = box.getCenter(new THREE.Vector3());
-      model.position.sub(center);
-      const size = box.getSize(new THREE.Vector3()).length();
-      const scale = 8 / size;
-      model.scale.setScalar(scale);
-
-      model.traverse(function(child) {
-        if(!child.isMesh) return;
-        const name = child.name || '';
-        if(name === 'Roof') {
-          rcRoofMeshes.push(child);
-          child.material = child.material.clone();
-          child.material.color.set(state.roofColor);
-        } else if(name === 'Wall') {
-          rcWallMeshes.push(child);
-          child.material = child.material.clone();
-          child.material.color.set(state.wallColor);
-        }
-        // 대지·바닥·내벽·가구 등 나머지 mesh는 원본 색상 유지
-      });
-
-      // roof/wall 이름을 가진 mesh가 하나도 없는 경우에만 폴백 처리
-      if(rcRoofMeshes.length === 0 && rcWallMeshes.length === 0) {
-        console.warn('roof/wall mesh를 찾지 못했습니다. 절차적 모델로 대체합니다.');
-        buildRcProceduralHouse();
-      }
-
-      rcScene.add(model);
-    },
-    undefined,
-    function(err) {
-      console.warn('rc_20.glb 로드 실패, 절차적 모델 사용:', err);
-      buildRcProceduralHouse();
-    }
-  );
-
-  animRc();
-}
-
-function buildRcProceduralHouse() {
-  // 벽체
-  const wallGeo = new THREE.BoxGeometry(6,3,5);
-  const wallMat = new THREE.MeshLambertMaterial({color: state.wallColor});
-  const wall = new THREE.Mesh(wallGeo, wallMat);
-  wall.position.y = 1.5;
-  rcScene.add(wall);
-  rcWallMeshes.push(wall);
-
-  // 지붕
-  const roofGeo = new THREE.ConeGeometry(4.5, 2, 4);
-  const roofMat = new THREE.MeshLambertMaterial({color: state.roofColor});
-  const roof = new THREE.Mesh(roofGeo, roofMat);
-  roof.position.y = 4;
-  roof.rotation.y = Math.PI/4;
-  rcScene.add(roof);
-  rcRoofMeshes.push(roof);
-
-  // 바닥
-  const floorGeo = new THREE.BoxGeometry(8,0.15,7);
-  const floorMat = new THREE.MeshLambertMaterial({color:'#cbd5e1'});
-  const floor = new THREE.Mesh(floorGeo, floorMat);
-  floor.position.y = -0.08;
-  rcScene.add(floor);
-}
-
-function applyRoofColor(colorHex) {
-  rcRoofMeshes.forEach(m => {
-    if(m.material) m.material.color.set(colorHex);
+  panel.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { specUi.cat = b.dataset.cat; specUi.item = null; renderSpec(d); });
+  panel.querySelectorAll('[data-item]').forEach(b => b.onclick = () => { specUi.item = b.dataset.item; renderSpec(d); });
+  panel.querySelectorAll('[data-choice]').forEach(b => b.onclick = () => {
+    state.spec[item.key] = { choice: b.dataset.choice }; renderSpec(d); applySpec3D();
+  });
+  panel.querySelectorAll('[data-color]').forEach(b => b.onclick = () => {
+    state.spec[item.key] = { choice: sel.choice.key, color: b.dataset.color }; renderSpec(d); applySpec3D();
   });
 }
 
-function applyWallColor(colorHex) {
-  rcWallMeshes.forEach(m => {
-    if(m.material) m.material.color.set(colorHex);
+// 3D 반영 : 외벽 재질(Wall ↔ Wall_brick)·색, 지붕 색, 창틀 색
+function applySpec3D() {
+  const d = specData[state.struct];
+  if (!d) return;
+  specItems(d).forEach(it => {
+    const target = it.color_target;
+    const meshes = target ? (bimScene.parts[target] || []) : [];
+    if (!meshes.length) return;
+    const s = specSel(it);
+    const matName = s.choice.model_material;
+    const hex = s.color ? s.color.hex : s.choice.color_hex;
+    meshes.forEach(m => {
+      const src = (matName && matName !== target && bimScene.mats[matName]) ? bimScene.mats[matName] : m.userData.baseMaterial;
+      if (!src) return;
+      m.userData.matCache = m.userData.matCache || {};
+      const key = src.uuid + '|' + (hex || '');
+      if (!m.userData.matCache[key]) { const mm = src.clone(); if (hex) mm.color.set(hex); m.userData.matCache[key] = mm; }
+      m.material = m.userData.matCache[key];
+    });
   });
 }
 
-function animRc() {
-  rcAnimId = requestAnimationFrame(animRc);
-  rcControls.update();
-  rcRenderer.render(rcScene, rcCamera);
-}
-
 // ============================================================
-// THREE.JS - 기타 구조 뷰어
+// THREE.JS - 3D + 사양 선택 화면 뷰어 (구조 공통)
 // ============================================================
 let otherRenderer, otherScene, otherCamera, otherControls, otherAnimId;
-let otherMeshes = [];
 
 function initOtherViewer() {
   const canvas = document.getElementById('other-canvas');
   if(otherRenderer) { otherRenderer.dispose(); cancelAnimationFrame(otherAnimId); }
-  otherMeshes = [];
-  bimModel.walls = []; bimModel.mats = {};
+  bimScene.parts = { Wall: [], Roof: [], Window_frame: [] }; bimScene.mats = {};
 
   otherScene = new THREE.Scene();
   otherScene.background = new THREE.Color('#e8f5ee');
   otherScene.add(new THREE.AmbientLight(0xffffff,1.2));
   const dl = new THREE.DirectionalLight(0xffffff,1.4);
   dl.position.set(5,10,7); otherScene.add(dl);
+  const dl2 = new THREE.DirectionalLight(0xffffff,0.5);
+  dl2.position.set(-6,6,-6); otherScene.add(dl2);
 
   otherCamera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 0.1, 1000);
   otherCamera.position.set(7,5,11);
@@ -1942,30 +1468,35 @@ function initOtherViewer() {
   otherControls = new THREE.OrbitControls(otherCamera, otherRenderer.domElement);
   otherControls.enableDamping = true;
 
-  const colorMap = {'경량목구조':'#d4b896','스틸조':'#e5e7eb','ALC조':'#c8e6d4'};
+  const colorMap = {'경량목구조':'#d4b896','경골목구조':'#d4b896','스틸조':'#e5e7eb','ALC조':'#c8e6d4','RC조':'#e2e8f0'};
   const c = colorMap[state.struct] || '#f1f5f9';
-  if (BIM_MODELS[state.struct]) {
-    const useOpts = !!BIM_OPTIONS[state.struct];
-    loadBimModel(BIM_MODELS[state.struct], otherScene, otherCamera, otherControls, {
-      wallColor: !useOpts && state.wallColor && state.wallColor !== '-' ? state.wallColor : null,
-      onLoad: (roofs, walls, mats) => { otherMeshes = walls; bimModel.walls = walls; bimModel.mats = mats || {}; applyBimMaterials(); },
-      onFail: () => { buildProceduralHouse(otherScene, c, '#6b7280'); otherScene.traverse(ch=>{ if(ch.isMesh) otherMeshes.push(ch); }); }
+  const procedural = () => {
+    buildProceduralHouse(otherScene, c, '#6b7280');
+    otherScene.traverse(ch => {
+      if (!ch.isMesh) return;
+      ch.userData.baseMaterial = ch.material;
+      if (ch.name === 'Wall') bimScene.parts.Wall.push(ch);
+      if (ch.name === 'Roof') bimScene.parts.Roof.push(ch);
+    });
+    applySpec3D();
+  };
+  const sizeSel = document.getElementById('other-size');
+  if (sizeSel) sizeSel.value = state.size;
+  const bm = bimModelFor(state.struct, state.size);
+  const note = document.getElementById('other-model-note');
+  if (note) note.textContent = !bm ? '3D 모델 준비 중 (간략 모형 표시)'
+    : bm.shown !== state.size ? '다락형(W)은 도면 준비 중이라 3D는 ' + bm.shown + ' 기준으로 표시함'
+    : state.struct === '중목구조' ? '기존 도면 기준 3D (새 도면이 오면 바뀜)' : '';
+  if (bm) {
+    loadBimModel(bm.url, otherScene, otherCamera, otherControls, {
+      onLoad: (parts, mats) => { bimScene.parts = parts; bimScene.mats = mats || {}; applySpec3D(); },
+      onFail: procedural
     });
   } else {
-    buildProceduralHouse(otherScene, c, '#6b7280');
-    // 벽체 mesh 저장
-    otherScene.traverse(child=>{
-      if(child.isMesh) otherMeshes.push(child);
-    });
+    procedural();
   }
-
+  setupSpec(state.struct);
   animOther();
-}
-
-function applyOtherColor(colorHex) {
-  otherMeshes.forEach(m=>{
-    if(m.material) m.material.color.set(colorHex);
-  });
 }
 
 function animOther() {
@@ -1986,12 +1517,12 @@ function buildProceduralHouse(scene, wallColor, roofColor) {
   // 벽체
   const wallMat = new THREE.MeshLambertMaterial({color: wallColor});
   const mainWall = new THREE.Mesh(new THREE.BoxGeometry(7,3.4,6), wallMat);
-  mainWall.position.y=1.7; scene.add(mainWall);
+  mainWall.name='Wall'; mainWall.position.y=1.7; scene.add(mainWall);
 
   // 지붕
   const roofMat = new THREE.MeshLambertMaterial({color: roofColor});
   const roof = new THREE.Mesh(new THREE.ConeGeometry(5.2,2.2,4), roofMat);
-  roof.position.y=4.6; roof.rotation.y=Math.PI/4; scene.add(roof);
+  roof.name='Roof'; roof.position.y=4.6; roof.rotation.y=Math.PI/4; scene.add(roof);
 
   // 창문
   const winMat = new THREE.MeshLambertMaterial({color:'#bae6fd',transparent:true,opacity:0.7});
