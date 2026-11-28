@@ -10,23 +10,23 @@
     {
       "key": "window_vendor",
       "label": "창호 업체",
-      "desc": "창호 프레임 제조사",
+      "desc": "창호 프레임 제조사 (업체명은 상담 때 안내)",
       "choices": [
         {
-          "key": "salamander",
-          "label": "살라만다",
+          "key": "a",
+          "label": "창호 A사",
           "base": true,
           "delta_manwon": 0
         },
         {
-          "key": "ensum",
-          "label": "엔썸",
+          "key": "b",
+          "label": "창호 B사",
           "base": false,
           "delta_manwon": 463
         },
         {
-          "key": "rehau",
-          "label": "레하우",
+          "key": "c",
+          "label": "창호 C사",
           "base": false,
           "delta_manwon": 670
         }
