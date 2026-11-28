@@ -1,11 +1,23 @@
 {
   "structure": "ALC조",
+  "key": "alc",
   "model": "38-S",
   "model_file": "models/alc_38s.glb",
-  "size_label": "38-S (3D 모델 기준)",
   "models": {
     "38-S": "models/alc_38s.glb",
     "50D-S": "models/alc_50ds.glb"
+  },
+  "price": {
+    "year": 2026,
+    "status": "확정",
+    "note": "2026년 공시금액 기준. 옵션 증감은 회의 확정 전 임시값",
+    "list_manwon": {
+      "38-S": null,
+      "38-W": null,
+      "50D-S": null,
+      "50D-W": null
+    },
+    "prop_rate": 0.04
   },
   "categories": [
     {
@@ -195,6 +207,12 @@
               "base": true,
               "delta_manwon": 0,
               "desc": "기본 사양",
+              "delta_by_size": {
+                "38-S": 0,
+                "38-W": 0,
+                "50D-S": 0,
+                "50D-W": 0
+              },
               "colors": [
                 {
                   "hex": "#3f4448",
@@ -218,8 +236,14 @@
               "key": "b",
               "label": "창호 B사",
               "base": false,
-              "delta_manwon": 463,
-              "desc": "",
+              "delta_manwon": 446,
+              "desc": "같은 창 구성, 업체만 변경",
+              "delta_by_size": {
+                "38-S": 446,
+                "38-W": 451,
+                "50D-S": 706,
+                "50D-W": 749
+              },
               "colors": [
                 {
                   "hex": "#3f4448",
@@ -243,8 +267,14 @@
               "key": "c",
               "label": "창호 C사",
               "base": false,
-              "delta_manwon": 670,
-              "desc": "",
+              "delta_manwon": 646,
+              "desc": "같은 창 구성, 업체만 변경",
+              "delta_by_size": {
+                "38-S": 646,
+                "38-W": 664,
+                "50D-S": 851,
+                "50D-W": 924
+              },
               "colors": [
                 {
                   "hex": "#3f4448",
@@ -278,14 +308,26 @@
               "base": true,
               "delta_manwon": 0,
               "desc": "친환경 수성페인트",
+              "delta_by_size": {
+                "38-S": 0,
+                "38-W": 0,
+                "50D-S": 0,
+                "50D-W": 0
+              },
               "thumb": "linear-gradient(135deg,#ffffff,#f1f5f9)"
             },
             {
               "key": "paper",
               "label": "벽지",
               "base": false,
-              "delta_manwon": -501,
-              "desc": "합지 벽지 (천장은 도장 유지)",
+              "delta_manwon": -543,
+              "desc": "합지 벽지",
+              "delta_by_size": {
+                "38-S": -543,
+                "38-W": -543,
+                "50D-S": -659,
+                "50D-W": -659
+              },
               "thumb": "repeating-linear-gradient(45deg,#f8fafc 0px,#f8fafc 6px,#eef2f7 6px,#eef2f7 12px)"
             }
           ]

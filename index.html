@@ -253,6 +253,27 @@
   .contract-row:last-child { border:none; }
   .contract-key { font-size:14px; color:var(--text-sub); font-weight:500; }
   .contract-val { font-size:14px; font-weight:700; color:var(--text); text-align:right; }
+  /* 구조별 비교표 (작업지시서 06) */
+  .cmp-table { width:100%; border-collapse:collapse; font-size:13.5px; font-variant-numeric:tabular-nums; }
+  .cmp-table th, .cmp-table td { padding:8px 8px; border-bottom:1px solid #eef2f0; text-align:right; vertical-align:middle; }
+  .cmp-table th { font-size:12px; color:var(--text-sub); font-weight:600; background:#f8faf9; }
+  .cmp-table th:first-child, .cmp-table td:first-child { text-align:left; }
+  .cmp-table tr.cmp-sel td { background:#e8f5ee; }
+  .cmp-badge { display:inline-block; font-size:11px; font-weight:700; color:#fff; background:var(--primary); border-radius:999px; padding:1px 8px; margin-left:4px; }
+  .cmp-note { font-size:11.5px; color:var(--text-sub); font-weight:400; margin-top:2px; }
+  .cmp-thumb { width:84px; height:56px; object-fit:cover; border-radius:6px; background:#eef5f0; display:block; margin-left:auto; }
+  .cmp-thumb-col { width:96px; }
+  .cmp-sub { font-size:14px; font-weight:700; margin:18px 0 6px; color:var(--text); }
+  .cmp-small { font-size:12.5px; }
+  .cmp-foot { font-size:12px; color:var(--text-sub); margin-top:12px; line-height:1.6; }
+  @media(max-width:600px){ .cmp-thumb-col, .cmp-vat { display:none; } .cmp-badge { display:none; } .cmp-table { font-size:12px; } .cmp-table th, .cmp-table td { padding:6px 4px; } }
+  @media print {
+    .top-nav, .no-print, .btn-row, .site-footer { display:none !important; }
+    body { background:#fff !important; }
+    .page { display:none !important; } .page.active { display:block !important; }
+    .contract-box { box-shadow:none !important; border:1px solid #ddd; break-inside:avoid; }
+    .cmp-table tr.cmp-sel td { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
   .contract-total { display:flex; justify-content:space-between; align-items:center; padding:20px 0 0; margin-top:8px; }
   .contract-total .label { font-size:18px; font-weight:700; }
   .contract-total .amount { font-size:28px; font-weight:800; color:var(--primary); }
@@ -906,7 +927,7 @@
             <path d="M6 20L24 8l18 12" stroke="#6B3A1F" stroke-width="3" stroke-linecap="round"/>
           </svg>
         </div>
-        <h3>경골목구조</h3>
+        <h3>경량목구조</h3>
         <p>PHIKO 표준주택 기본 구조.<br>패시브 품질 최우수.</p>
       </div>
       <div class="type-card" data-struct="스틸조" onclick="selectStruct('스틸조')">
@@ -964,8 +985,8 @@
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
           <label for="other-size" style="font-size:14px;font-weight:700;color:var(--text);">평형 · 타입</label>
           <select id="other-size" onchange="selectSize(this.value)" style="padding:6px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px;">
-            <option value="38-S">38-S (1층, 다락 없음)</option><option value="38-W">38-W (1층, 다락 있음)</option>
-            <option value="50D-S">50D-S (2층, 다락 없음)</option><option value="50D-W">50D-W (2층, 다락 있음)</option>
+            <option value="38-S">38-S (1층, 다락 없음 · 3D 있음)</option><option value="38-W">38-W (1층, 다락 있음 · 3D는 38-S 기준)</option>
+            <option value="50D-S">50D-S (2층, 다락 없음 · 3D 있음)</option><option value="50D-W">50D-W (2층, 다락 있음 · 3D는 50D-S 기준)</option>
           </select>
           <span id="other-model-note" style="font-size:12.5px;color:var(--text-sub);"></span>
         </div>
@@ -1048,7 +1069,7 @@
       <button class="btn-nav-next" onmousedown="navNext()">다음</button>
     </div>
   </nav>
-  <div class="page-content" style="max-width:720px;">
+  <div class="page-content" style="max-width:960px;">
     <div class="section-title">계약서 요약</div>
     <div class="section-sub">선택하신 내용을 최종 확인하세요.</div>
     <div class="contract-box">
@@ -1065,20 +1086,35 @@
       <div class="contract-row">
         <span class="contract-key">평형 · 타입</span>
         <span class="contract-val"><select id="c-size" onchange="state.size=this.value; buildContract();" style="padding:6px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:14px;">
-          <option value="38-S">38-S (1층, 다락 없음)</option><option value="38-W">38-W (1층, 다락 있음)</option>
-          <option value="50D-S">50D-S (2층, 다락 없음)</option><option value="50D-W">50D-W (2층, 다락 있음)</option>
+          <option value="38-S">38-S (1층, 다락 없음 · 3D 있음)</option><option value="38-W">38-W (1층, 다락 있음 · 3D는 38-S 기준)</option>
+          <option value="50D-S">50D-S (2층, 다락 없음 · 3D 있음)</option><option value="50D-W">50D-W (2층, 다락 있음 · 3D는 50D-S 기준)</option>
         </select></span>
       </div>
       <div class="contract-row">
-        <span class="contract-key">2026년 계약금액 (VAT 별도)</span>
+        <span class="contract-key" id="c-year-label">공시금액 (VAT 별도)</span>
         <span class="contract-val" id="c-price">-</span>
       </div>
+      <div class="contract-row">
+        <span class="contract-key">옵션 증감 (관리비·예치금 변동 포함)</span>
+        <span class="contract-val" id="c-opt-total">-</span>
+      </div>
+      <div class="contract-row">
+        <span class="contract-key">개략 금액 (VAT 별도)</span>
+        <span class="contract-val" id="c-approx">-</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-sub);padding:6px 0;" id="c-price-note"></div>
       <div class="contract-total">
         <span class="label">총 예상 금액</span>
         <span class="amount" id="c-total">-</span>
       </div>
     </div>
-    <div class="btn-row" style="margin-top:28px;">
+    <div class="section-title" style="font-size:22px;margin-top:36px;">구조별 비교</div>
+    <div class="section-sub" style="margin-bottom:14px;">같은 평형·타입과 사양 선택 그대로, 구조만 바꿨을 때의 개략 금액입니다.</div>
+    <div id="compare-box" class="contract-box" style="overflow-x:auto;"></div>
+    <div class="btn-row no-print" style="margin-top:16px;">
+      <button class="btn-secondary" onclick="window.print()">인쇄 · PDF 저장</button>
+    </div>
+    <div class="btn-row no-print" style="margin-top:28px;">
       <button class="btn-secondary" onmousedown="goTo('page-care')">← 뒤로가기</button>
       <button class="btn-primary" onclick="alert('계약 신청이 완료되었습니다. 담당자가 연락드립니다.')">계약 신청 완료</button>
     </div>
@@ -1221,29 +1257,26 @@ function buildContract() {
     box.innerHTML = h;
   }
 
-  // 2026년 계약금액 : '가격' 탭 표와 같은 값 (홈페이지 금액, VAT 별도). ALC 는 별도 협의
-  const PRICE26 = {
-    '경량목구조': {'38-S':363400000,'38-W':418900000,'50D-S':415000000,'50D-W':453200000},
-    'RC조':       {'38-S':437000000,'38-W':492500000,'50D-S':471600000,'50D-W':512100000},
-    '스틸조':     {'38-S':381500000,'38-W':453700000,'50D-S':435700000,'50D-W':496900000}
-  };
-  PRICE26['경골목구조'] = PRICE26['경량목구조'];
+  // 개략 금액 (작업지시서 06) = 공시금액 + 옵션 증감 (관리비·예치금 비례분 포함, 내부 계산 결과). 공시금액은 data/options_*.json price
   const sizeSel = document.getElementById('c-size');
-  if (sizeSel) {
-    const o38 = sizeSel.querySelector('option[value="38-S"]');
-    if (o38) o38.textContent = (d && d.size_label) ? d.size_label : '38-S (1층, 다락 없음)';
-    sizeSel.value = state.size;
-  }
-  const base = (PRICE26[state.struct] || {})[state.size];
+  if (sizeSel) sizeSel.value = state.size;
+  const P = estimateFor(d);
   const careYear = state.care === '프리미엄' ? 59000 * 12 : state.care === '스탠다드' ? 29000 * 12 : 0;
-  const won = n => n.toLocaleString() + '원';
-  if (!base) {
+  const yl = document.getElementById('c-year-label');
+  if (yl && d && d.price) yl.textContent = d.price.year + '년 공시금액 (VAT 별도)';
+  const pn = document.getElementById('c-price-note');
+  if (pn) pn.textContent = d && d.price ? d.price.note : '';
+  document.getElementById('c-opt-total').textContent = P ? (P.optWon ? signWon(P.optWon) : '변동 없음') + (P.pending ? ' (별도 협의 항목 제외)' : '') : '-';
+  if (!P || P.list === null) {
     document.getElementById('c-price').textContent = '별도 협의';
+    document.getElementById('c-approx').textContent = '별도 협의';
     document.getElementById('c-total').textContent = '별도 협의 (상담 후 결정)';
   } else {
-    document.getElementById('c-price').textContent = won(base) + ' (VAT 포함 ' + won(Math.round(base * 1.1)) + ')';
-    document.getElementById('c-total').textContent = won(base + careYear) + (careYear ? ' (Care+ 1년 포함)' : '');
+    document.getElementById('c-price').textContent = won(P.list);
+    document.getElementById('c-approx').textContent = won(P.total) + ' (VAT 포함 ' + won(Math.round(P.total * 1.1)) + ')';
+    document.getElementById('c-total').textContent = won(P.total + careYear) + (careYear ? ' (Care+ 1년 포함)' : '');
   }
+  buildCompare();
 }
 
 // ============================================================
@@ -1256,6 +1289,9 @@ function fitRenderer(renderer, camera, canvas) {
   const h = canvas.clientHeight || 520;
   renderer.setSize(w, h, false);
   camera.aspect = w / h; camera.updateProjectionMatrix();
+  if (camera.userData.fit && camera.userData.fitAspect !== camera.aspect) {   // 화면 비율이 바뀌면 거리 다시 맞춤
+    camera.userData.fitAspect = camera.aspect; camera.userData.fit();
+  }
 }
 window.addEventListener('resize', () => {
   if (typeof stdRenderer !== 'undefined') fitRenderer(stdRenderer, stdCamera, document.getElementById('standard-canvas'));
@@ -1308,10 +1344,20 @@ function loadBimModel(url, scene, camera, controls, opt) {
     const c = box.getCenter(new THREE.Vector3());
     model.position.set(-c.x, -box.min.y, -c.z);
     scene.add(model);
-    const d = box.getSize(new THREE.Vector3()).length();
-    camera.position.set(d * 0.75, d * 0.55, d * 0.95);
-    controls.target.set(0, (box.max.y - box.min.y) * 0.35, 0);
-    controls.update();
+    // 카메라 거리 : 모델을 감싸는 구가 세로·가로 시야 중 좁은 쪽에 들어오게 (모바일 세로 화면에서도 잘리지 않게)
+    const radius = box.getSize(new THREE.Vector3()).length() / 2;
+    const targetY = (box.max.y - box.min.y) * 0.35;
+    camera.userData.fit = function() {
+      const vf = THREE.MathUtils.degToRad(camera.fov);
+      const hf = 2 * Math.atan(Math.tan(vf / 2) * camera.aspect);
+      const dist = radius / Math.sin(Math.min(vf, hf) / 2) * 1.05;
+      const dir = new THREE.Vector3(0.75, 0.55, 0.95).normalize();
+      camera.position.copy(dir.multiplyScalar(dist)).add(new THREE.Vector3(0, targetY, 0));
+      controls.target.set(0, targetY, 0);
+      controls.update();
+    };
+    camera.userData.fitAspect = camera.aspect;
+    camera.userData.fit();
     // GLB 안의 재질 전체 (메시에 안 쓰인 옵션 재질 Wall_brick 등 포함)
     gltf.parser.getDependencies('material').then(function(list) {
       const mats = {};
@@ -1332,7 +1378,9 @@ const specData = {};                                                   // specDa
 const bimScene = { parts: { Wall: [], Roof: [], Window_frame: [] }, mats: {} };
 const manwon = n => (n > 0 ? '+' : n < 0 ? '-' : '') + Math.abs(n).toLocaleString() + '만원';
 // 증감 표기 : 기본 / 별도 협의(금액 미확정, delta_manwon = null) / 약 ±N만원
-const deltaTxt = c => c.base ? '기본' : (c.delta_manwon === null || c.delta_manwon === undefined) ? '별도 협의' : '약 ' + manwon(c.delta_manwon);
+// 타입별 금액이 다른 선택지(delta_by_size, 예 : 경량목 창호)는 고른 평형·타입 값을 씀
+const cDelta = c => (c.delta_by_size && c.delta_by_size[state.size] !== undefined) ? c.delta_by_size[state.size] : c.delta_manwon;
+const deltaTxt = c => c.base ? '기본' : (cDelta(c) === null || cDelta(c) === undefined) ? '별도 협의' : '약 ' + manwon(cDelta(c));
 
 function loadSpec(struct) {
   const url = BIM_OPTIONS[struct];
@@ -1355,10 +1403,110 @@ function specTotal(d) {
   specItems(d).forEach(it => {
     const c = specSel(it).choice;
     if (c.base) return;
-    if (c.delta_manwon === null || c.delta_manwon === undefined) pending = true; else sum += c.delta_manwon;
+    const v = cDelta(c);
+    if (v === null || v === undefined) pending = true; else sum += v;
   });
   return { sum, pending };
 }
+// ============================================================
+// 개략 금액 · 구조별 비교표 (작업지시서 06)
+// ============================================================
+const won = n => Math.round(n).toLocaleString() + '원';
+const signWon = n => (n > 0 ? '+' : n < 0 ? '-' : '') + Math.abs(Math.round(n)).toLocaleString() + '원';
+// d = 구조별 options JSON. 같은 사양 선택(state.spec)을 그 구조에 적용 : 그 구조에 없는 선택지는 기본으로 보고 표시
+function estimateFor(d) {
+  if (!d || !d.price) return null;
+  const lm = d.price.list_manwon[state.size];
+  const t = specTotal(d);
+  const optWon = t.sum * 10000;
+  let missing = [];
+  specItems(d).forEach(it => {
+    const s = (state.spec || {})[it.key];
+    if (s && s.choice && !it.choices.some(c => c.key === s.choice)) missing.push(it.label);
+  });
+  return { list: lm === null || lm === undefined ? null : lm * 10000, optWon, pending: t.pending, missing,
+           total: lm === null || lm === undefined ? null : lm * 10000 + optWon };
+}
+const COMPARE_STRUCTS = ['경량목구조', 'RC조', '스틸조', 'ALC조', '중목구조'];
+let thumbRenderer = null;
+const thumbCache = {};
+function renderThumb(url) {
+  if (thumbCache[url]) return thumbCache[url];
+  thumbCache[url] = new Promise(resolve => {
+    if (!thumbRenderer) {
+      thumbRenderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+      thumbRenderer.setSize(240, 160);
+    }
+    new THREE.GLTFLoader().load(url, gltf => {
+      const sc = new THREE.Scene();
+      sc.background = new THREE.Color('#eef5f0');
+      sc.add(new THREE.AmbientLight(0xffffff, 1.1));
+      const dl = new THREE.DirectionalLight(0xffffff, 1.3); dl.position.set(6, 10, 8); sc.add(dl);
+      sc.add(gltf.scene);
+      const box = new THREE.Box3().setFromObject(gltf.scene);
+      const c = box.getCenter(new THREE.Vector3()), dd = box.getSize(new THREE.Vector3()).length();
+      const cam = new THREE.PerspectiveCamera(35, 1.5, 0.1, 500);
+      cam.position.set(c.x + dd * 0.6, c.y + dd * 0.22, c.z + dd * 0.85);
+      cam.lookAt(c.x, c.y, c.z);
+      thumbRenderer.render(sc, cam);
+      resolve(thumbRenderer.domElement.toDataURL('image/png'));
+    }, undefined, () => resolve(''));
+  });
+  return thumbCache[url];
+}
+async function buildCompare() {
+  const box = document.getElementById('compare-box');
+  if (!box) return;
+  const list = await Promise.all(COMPARE_STRUCTS.map(s => loadSpec(s)));
+  const ds = COMPARE_STRUCTS.map((s, i) => ({ s, d: list[i] })).filter(x => x.d);
+  if (!ds.length) { box.innerHTML = ''; return; }
+  const year = ds[0].d.price ? ds[0].d.price.year : '';
+  const narrow = window.innerWidth < 600;                    // 모바일 : 만원 단위로 줄여 표시
+  const cw = n => narrow ? Math.round(n / 10000).toLocaleString() + '만원' : won(n);
+  let h = '<table class="cmp-table"><thead><tr><th>구조</th><th class="cmp-thumb-col">3D</th><th>기본 공시금액</th><th>선택 옵션 증감</th><th>개략 합계 (VAT 별도)</th><th class="cmp-vat">VAT 포함</th></tr></thead><tbody>';
+  ds.forEach(({ s, d }) => {
+    const P = estimateFor(d);
+    const sel = s === state.struct || (s === '경량목구조' && state.struct === '경골목구조');
+    const note = P.missing.length ? '<div class="cmp-note">' + P.missing.join('·') + ' : 이 구조에 없는 선택지라 기본으로 계산</div>' : '';
+    h += '<tr class="' + (sel ? 'cmp-sel' : '') + '"><td><b>' + s + '</b>' + (sel ? ' <span class="cmp-badge">선택</span>' : '') + note + '</td>'
+       + '<td class="cmp-thumb-col"><img class="cmp-thumb" data-struct="' + s + '" alt=""></td>'
+       + '<td>' + (P.list === null ? '별도 협의' : cw(P.list)) + '</td>'
+       + '<td>' + (P.optWon ? (P.optWon > 0 ? '+' : '-') + cw(Math.abs(P.optWon)) : '변동 없음') + (P.pending ? '<div class="cmp-note">별도 협의 항목 제외</div>' : '') + '</td>'
+       + '<td><b>' + (P.total === null ? '별도 협의' : cw(P.total)) + '</b></td>'
+       + '<td class="cmp-vat">' + (P.total === null ? '-' : cw(P.total * 1.1)) + '</td></tr>';
+  });
+  h += '</tbody></table>';
+  // 항목별 증감 : 금액 근거가 있는 선택지만 (기본 사양 대비, 구조별 물량으로 계산)
+  const rows = [];
+  ds.forEach(({ d }) => specItems(d).forEach(it => it.choices.forEach(c => {
+    if (c.base || cDelta(c) === null || cDelta(c) === undefined) return;
+    const k = it.key + '|' + c.key;
+    if (!rows.some(r => r.k === k)) rows.push({ k, item: it.key, choice: c.key, label: it.label + ' : ' + c.label });
+  })));
+  rows.sort((a, b) => a.label.localeCompare(b.label, 'ko'));
+  if (rows.length) {
+    h += '<div class="cmp-sub">항목별로 바꾸면 (기본 사양 대비, 구조별 물량으로 계산)</div><table class="cmp-table cmp-small"><thead><tr><th>선택</th>'
+       + ds.map(x => '<th>' + x.s + '</th>').join('') + '</tr></thead><tbody>';
+    rows.forEach(r => {
+      h += '<tr><td>' + r.label + '</td>' + ds.map(({ d }) => {
+        const it = specItems(d).find(i => i.key === r.item);
+        const c = it && it.choices.find(x => x.key === r.choice);
+        if (!c) return '<td>-</td>';
+        const v = cDelta(c);
+        return '<td>' + (c.base ? '기본' : (narrow && v !== null && v !== undefined) ? manwon(v) : deltaTxt(c)) + '</td>';
+      }).join('') + '</tr>';
+    });
+    h += '</tbody></table>';
+  }
+  h += '<div class="cmp-foot">' + (year ? year + '년 공시금액 기준, ' : '') + '평형·타입 ' + state.size + ', 사양 선택은 그대로 두고 구조만 바꾼 금액. '
+     + '개략 금액이며 대지 조건·인입·토목 등 별도 공사와 상담 결과에 따라 달라짐. ALC·중목은 계약금액 별도 협의</div>';
+  box.innerHTML = h;
+  box.querySelectorAll('img.cmp-thumb').forEach(img => {
+    const bm = bimModelFor(img.dataset.struct, state.size);
+    if (bm) renderThumb(bm.url).then(src => { if (src) img.src = src; });
+  });
+}
+
 function totalTxt(t) {
   return (t.sum ? '약 ' + manwon(t.sum) : (t.pending ? '' : '변동 없음')) + (t.pending ? (t.sum ? ' + ' : '') + '별도 협의 항목' : '');
 }

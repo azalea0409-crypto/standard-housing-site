@@ -1,12 +1,24 @@
 {
   "structure": "경량목구조",
+  "key": "wood",
   "model": "38-S",
   "model_file": "models/wood_38s.glb",
   "models": {
     "38-S": "models/wood_38s.glb",
     "50D-S": "models/wood_50ds.glb"
   },
-  "size_label": "38-S (3D 모델 기준)",
+  "price": {
+    "year": 2026,
+    "status": "확정",
+    "note": "2026년 공시금액 기준. 옵션 증감은 회의 확정 전 임시값",
+    "list_manwon": {
+      "38-S": 36340,
+      "38-W": 41890,
+      "50D-S": 41500,
+      "50D-W": 45320
+    },
+    "prop_rate": 0.04
+  },
   "categories": [
     {
       "key": "finish",
@@ -189,11 +201,17 @@
           "desc": "PVC 시스템창호 + 로이 3중유리. 창틀 외부 색 기본 짙은 회색 (다른 색은 별도 협의)",
           "choices": [
             {
-              "key": "std",
-              "label": "기본 시스템창호",
+              "key": "b",
+              "label": "창호 B사",
               "base": true,
               "delta_manwon": 0,
               "desc": "기본 사양",
+              "delta_by_size": {
+                "38-S": 0,
+                "38-W": 0,
+                "50D-S": 0,
+                "50D-W": 0
+              },
               "colors": [
                 {
                   "hex": "#3f4448",
@@ -214,11 +232,48 @@
               "thumb": "linear-gradient(135deg,#3f4448 0 18%,#bcd8e6 18% 82%,#3f4448 82%)"
             },
             {
-              "key": "other",
-              "label": "다른 제품",
+              "key": "a",
+              "label": "창호 A사",
               "base": false,
-              "delta_manwon": null,
-              "desc": "제품 변경은 상담 후 결정",
+              "delta_manwon": -482,
+              "desc": "같은 창 구성, 업체만 변경",
+              "delta_by_size": {
+                "38-S": -482,
+                "38-W": -486,
+                "50D-S": -700,
+                "50D-W": -742
+              },
+              "colors": [
+                {
+                  "hex": "#3f4448",
+                  "label": "짙은 회색",
+                  "base": true
+                },
+                {
+                  "hex": "#1a1a1a",
+                  "label": "블랙",
+                  "base": false
+                },
+                {
+                  "hex": "#f5f5f5",
+                  "label": "화이트",
+                  "base": false
+                }
+              ],
+              "thumb": "linear-gradient(135deg,#3f4448 0 18%,#bcd8e6 18% 82%,#3f4448 82%)"
+            },
+            {
+              "key": "c",
+              "label": "창호 C사",
+              "base": false,
+              "delta_manwon": 215,
+              "desc": "같은 창 구성, 업체만 변경",
+              "delta_by_size": {
+                "38-S": 215,
+                "38-W": 231,
+                "50D-S": 144,
+                "50D-W": 174
+              },
               "colors": [
                 {
                   "hex": "#3f4448",
@@ -252,14 +307,26 @@
               "base": true,
               "delta_manwon": 0,
               "desc": "합지 벽지",
+              "delta_by_size": {
+                "38-S": 0,
+                "38-W": 0,
+                "50D-S": 0,
+                "50D-W": 0
+              },
               "thumb": "repeating-linear-gradient(45deg,#f8fafc 0px,#f8fafc 6px,#eef2f7 6px,#eef2f7 12px)"
             },
             {
               "key": "paint",
               "label": "도장",
               "base": false,
-              "delta_manwon": null,
+              "delta_manwon": 449,
               "desc": "친환경 수성페인트",
+              "delta_by_size": {
+                "38-S": 449,
+                "38-W": 449,
+                "50D-S": 642,
+                "50D-W": 642
+              },
               "thumb": "linear-gradient(135deg,#ffffff,#f1f5f9)"
             }
           ]
